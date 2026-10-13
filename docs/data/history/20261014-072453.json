@@ -1,0 +1,440 @@
+{
+  "generated_at": "2026-10-14T07:24:53+08:00",
+  "timezone": "Asia/Singapore",
+  "bots": [
+    {
+      "id": "0xboan",
+      "name": "模拟盘0xboan",
+      "strategy": "FOMO 周榜跟单 · 两连亏换人",
+      "start_cash": 1000.0,
+      "cash": 1000.0,
+      "equity": 1000.0,
+      "realized_pnl": 0.0,
+      "trade_count": 0,
+      "win_count": 0,
+      "loss_count": 0,
+      "open_positions_count": 0,
+      "current_trader": "healthysmilee",
+      "consecutive_losses": 0,
+      "sizing_note": "对方下单×0.25；未知则权益×0.05；单笔上限权益×0.25",
+      "updated_at": "2026-10-14T07:14:03+08:00",
+      "recent_events": [
+        {
+          "ts": "2026-10-14T07:14:04+08:00",
+          "type": "hire",
+          "bot_id": "0xboan",
+          "handle": "healthysmilee",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @healthysmilee"
+        },
+        {
+          "ts": "2026-10-14T07:17:20+08:00",
+          "type": "rules_update",
+          "bot_id": "0xboan",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）"
+        }
+      ],
+      "source_path": "/workspace/fomo-sim-0xboan"
+    },
+    {
+      "id": "0xTenzo",
+      "name": "模拟盘0xTenzo",
+      "strategy": "FOMO 周榜跟单 · 两连亏换人",
+      "start_cash": 1000.0,
+      "cash": 1000.0,
+      "equity": 1000.0,
+      "realized_pnl": 0.0,
+      "trade_count": 0,
+      "win_count": 0,
+      "loss_count": 0,
+      "open_positions_count": 0,
+      "current_trader": "jamjam0407",
+      "consecutive_losses": 0,
+      "sizing_note": "对方下单×0.25；未知则权益×0.05；单笔上限权益×0.25",
+      "updated_at": "2026-10-14T07:09:44+08:00",
+      "recent_events": [
+        {
+          "ts": "2026-10-14T07:09:45+08:00",
+          "type": "hire",
+          "bot_id": "0xTenzo",
+          "handle": "jamjam0407",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @jamjam0407"
+        },
+        {
+          "ts": "2026-10-14T07:18:46+08:00",
+          "type": "rules_update",
+          "bot_id": "0xTenzo",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%"
+        }
+      ],
+      "source_path": "/workspace/fomo-sim"
+    },
+    {
+      "id": "savipww",
+      "name": "模拟盘savipww",
+      "strategy": "八席纸面台 QUANT→SCAN→JUDGE→SIZE→FILL · RISK",
+      "start_cash": 100.0,
+      "cash": 99.5899,
+      "equity": 99.5899,
+      "realized_pnl": -0.4101,
+      "trade_count": 1,
+      "win_count": 0,
+      "loss_count": 1,
+      "open_positions_count": 0,
+      "current_trader": null,
+      "consecutive_losses": null,
+      "sizing_note": "Kelly×自由现金，meme 封顶约 6% · QUANT 拨盘",
+      "updated_at": "2026-10-14T07:18:57+08:00",
+      "recent_events": [
+        {
+          "ts": "2026-10-14T07:18:04+08:00",
+          "type": "skip",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "PRICED",
+          "pnl": null,
+          "msg": "PRICED · judge_reject:soft_momentum_already_spent:0.85>0.6"
+        },
+        {
+          "ts": "2026-10-14T07:18:09+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "DEMO1",
+          "pnl": null,
+          "msg": "DEMO1 · SCAN→JUDGE→SIZE"
+        },
+        {
+          "ts": "2026-10-14T07:18:13+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "NVDA",
+          "pnl": null,
+          "msg": "NVDA · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:16+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "AAPL",
+          "pnl": null,
+          "msg": "AAPL · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:26+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "AMZN",
+          "pnl": null,
+          "msg": "AMZN · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:27+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "AVGO",
+          "pnl": null,
+          "msg": "AVGO · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:31+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "GOOGL",
+          "pnl": null,
+          "msg": "GOOGL · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:36+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "META",
+          "pnl": null,
+          "msg": "META · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:38+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "MSFT",
+          "pnl": null,
+          "msg": "MSFT · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:39+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "AMD",
+          "pnl": null,
+          "msg": "AMD · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:42+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "CRM",
+          "pnl": null,
+          "msg": "CRM · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:43+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "ORCL",
+          "pnl": null,
+          "msg": "ORCL · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:49+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "BTC/USD",
+          "pnl": null,
+          "msg": "BTC/USD · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:52+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "SOL/USD",
+          "pnl": null,
+          "msg": "SOL/USD · fill_alpaca_paper"
+        },
+        {
+          "ts": "2026-10-14T07:18:54+08:00",
+          "type": "close",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "DEMO1",
+          "pnl": -0.410053,
+          "msg": "DEMO1 · volume_momentum_collapse:0.1667<0.2"
+        }
+      ],
+      "source_path": "/workspace/paper-trading/data",
+      "seats": [
+        "CHIEF",
+        "QUANT",
+        "SCAN",
+        "JUDGE",
+        "STOCKS",
+        "SIZE",
+        "FILL",
+        "RISK"
+      ]
+    }
+  ],
+  "recent_events": [
+    {
+      "ts": "2026-10-14T07:18:54+08:00",
+      "type": "close",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "DEMO1",
+      "pnl": -0.410053,
+      "msg": "DEMO1 · volume_momentum_collapse:0.1667<0.2",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:52+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "SOL/USD",
+      "pnl": null,
+      "msg": "SOL/USD · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:49+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "BTC/USD",
+      "pnl": null,
+      "msg": "BTC/USD · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:46+08:00",
+      "type": "rules_update",
+      "bot_id": "0xTenzo",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-14T07:18:43+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "ORCL",
+      "pnl": null,
+      "msg": "ORCL · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:42+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "CRM",
+      "pnl": null,
+      "msg": "CRM · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:39+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "AMD",
+      "pnl": null,
+      "msg": "AMD · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:38+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "MSFT",
+      "pnl": null,
+      "msg": "MSFT · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:36+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "META",
+      "pnl": null,
+      "msg": "META · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:31+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "GOOGL",
+      "pnl": null,
+      "msg": "GOOGL · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:27+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "AVGO",
+      "pnl": null,
+      "msg": "AVGO · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:26+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "AMZN",
+      "pnl": null,
+      "msg": "AMZN · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:16+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "AAPL",
+      "pnl": null,
+      "msg": "AAPL · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:13+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "NVDA",
+      "pnl": null,
+      "msg": "NVDA · fill_alpaca_paper",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:09+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "DEMO1",
+      "pnl": null,
+      "msg": "DEMO1 · SCAN→JUDGE→SIZE",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:18:04+08:00",
+      "type": "skip",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "PRICED",
+      "pnl": null,
+      "msg": "PRICED · judge_reject:soft_momentum_already_spent:0.85>0.6",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-14T07:17:20+08:00",
+      "type": "rules_update",
+      "bot_id": "0xboan",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-14T07:14:04+08:00",
+      "type": "hire",
+      "bot_id": "0xboan",
+      "handle": "healthysmilee",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @healthysmilee",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-14T07:09:45+08:00",
+      "type": "hire",
+      "bot_id": "0xTenzo",
+      "handle": "jamjam0407",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @jamjam0407",
+      "bot_name": "模拟盘0xTenzo"
+    }
+  ],
+  "note": "纸面模拟 · 非实盘 · Paper only"
+}

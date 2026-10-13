@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>模拟盘对比 · Paper Sim Compare</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121820;
+    --panel2: #18212c;
+    --border: #243041;
+    --text: #e7eef7;
+    --muted: #8b9bb0;
+    --green: #3dd68c;
+    --red: #ff6b7a;
+    --amber: #f5c542;
+    --blue: #5b9dff;
+    --purple: #b388ff;
+    --cyan: #4fd1c5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #152033 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .75rem 1.25rem;
+    padding: 1.25rem 1.5rem .5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { margin: 0; font-size: 1.25rem; font-weight: 650; letter-spacing: .02em; }
+  header .sub { color: var(--muted); font-size: .85rem; }
+  header .meta { margin-left: auto; color: var(--muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
+  .badge {
+    display: inline-block; padding: .15rem .5rem; border-radius: 999px;
+    background: #1a2a1f; color: var(--green); font-size: .7rem; font-weight: 600;
+    border: 1px solid #2a4a35;
+  }
+  main { padding: 1rem 1.5rem 2.5rem; max-width: 1280px; margin: 0 auto; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0 1.5rem;
+  }
+  @media (max-width: 960px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    background: linear-gradient(165deg, var(--panel2), var(--panel));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.1rem 1.15rem;
+    box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute; inset: 0 auto 0 0; width: 3px;
+    background: var(--accent, var(--blue));
+  }
+  .card[data-id="0xboan"] { --accent: var(--cyan); }
+  .card[data-id="0xTenzo"] { --accent: var(--blue); }
+  .card[data-id="savipww"] { --accent: var(--purple); }
+  .card .name { font-size: 1rem; font-weight: 650; margin: 0 0 .2rem; }
+  .card .strategy { color: var(--muted); font-size: .75rem; line-height: 1.35; min-height: 2.1em; }
+  .equity {
+    font-size: 1.85rem; font-weight: 700; font-variant-numeric: tabular-nums;
+    margin: .65rem 0 .15rem; letter-spacing: -.02em;
+  }
+  .pnl { font-size: .95rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pnl.up { color: var(--green); }
+  .pnl.down { color: var(--red); }
+  .pnl.flat { color: var(--muted); }
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: .45rem .75rem;
+    margin-top: .85rem; font-size: .8rem;
+  }
+  .grid .k { color: var(--muted); }
+  .grid .v { font-variant-numeric: tabular-nums; text-align: right; font-weight: 550; }
+  .trader {
+    margin-top: .75rem; padding: .45rem .6rem; border-radius: 8px;
+    background: rgba(255,255,255,.03); border: 1px solid var(--border);
+    font-size: .78rem;
+  }
+  .trader a { color: var(--blue); text-decoration: none; }
+  .sizing { color: var(--muted); font-size: .72rem; margin-top: .55rem; line-height: 1.4; }
+  section h2 {
+    font-size: .95rem; margin: 0 0 .65rem; font-weight: 650;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .table-wrap {
+    overflow: auto; border: 1px solid var(--border); border-radius: 12px;
+    background: var(--panel);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  th, td { padding: .55rem .7rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 550; background: var(--panel2); position: sticky; top: 0; }
+  tr:last-child td { border-bottom: none; }
+  .tag {
+    display: inline-block; padding: .1rem .4rem; border-radius: 5px;
+    font-size: .68rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+  }
+  .tag-open { background: #1a2f45; color: var(--blue); }
+  .tag-close { background: #2a2230; color: var(--purple); }
+  .tag-skip { background: #2a2a1a; color: var(--amber); }
+  .tag-hire { background: #1a2a1f; color: var(--green); }
+  .tag-fire { background: #2a1a1e; color: var(--red); }
+  .tag-rules_update { background: #1e2430; color: var(--cyan); }
+  .err { color: var(--red); padding: 1rem; }
+  footer { color: var(--muted); font-size: .72rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>模拟盘对比</h1>
+  <span class="badge">纸面 · PAPER ONLY</span>
+  <span class="sub">三盘一眼对照 · 实盘前参考</span>
+  <div class="meta" id="meta">加载中…</div>
+</header>
+<main>
+  <div class="cards" id="cards"></div>
+  <section>
+    <h2>最近事件 <span class="sub" style="font-weight:400;color:var(--muted)">open / close / skip / hire / fire</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>盘</th>
+            <th>类型</th>
+            <th>详情</th>
+            <th>PnL</th>
+          </tr>
+        </thead>
+        <tbody id="events"></tbody>
+      </table>
+    </div>
+  </section>
+  <footer id="footer">数据源：fomo-sim-0xboan · fomo-sim · paper-trading</footer>
+</main>
+<script>
+const LIVE = location.port === "8765" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
+const URLS = LIVE
+  ? ["/api/snapshot.json", "./data/latest.json"]
+  : ["./data/latest.json"];
+
+function money(n) {
+  if (n == null || Number.isNaN(n)) return "—";
+  const s = Math.abs(n) >= 1000 ? n.toLocaleString("en-US", {maximumFractionDigits: 2}) : n.toFixed(2);
+  return "$" + s;
+}
+function pct(n) {
+  const sign = n > 0 ? "+" : "";
+  return sign + n.toFixed(2) + "%";
+}
+function pnlClass(n) {
+  if (n > 0.0001) return "up";
+  if (n < -0.0001) return "down";
+  return "flat";
+}
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function tagClass(t) {
+  return "tag tag-" + (t || "").replace(/[^a-z_]/gi, "");
+}
+
+function render(data) {
+  const meta = document.getElementById("meta");
+  meta.textContent = "更新 " + (data.generated_at || "—") + " · " + (data.timezone || "SGT");
+  const cards = document.getElementById("cards");
+  cards.innerHTML = (data.bots || []).map(b => {
+    const pnl = b.equity - b.start_cash;
+    const pnlP = b.start_cash ? (pnl / b.start_cash) * 100 : 0;
+    let traderHtml;
+    if (b.current_trader) {
+      traderHtml = `<div class="trader">当前跟单 <a href="https://x.com/${esc(b.current_trader)}" target="_blank" rel="noopener">@${esc(b.current_trader)}</a>
+        · 连亏 <b>${b.consecutive_losses ?? 0}</b></div>`;
+    } else if (b.seats) {
+      traderHtml = `<div class="trader">席位 ${esc((b.seats || []).join(" · "))}</div>`;
+    } else {
+      traderHtml = `<div class="trader">策略台 · 无跟单对象</div>`;
+    }
+    return `<article class="card" data-id="${esc(b.id)}">
+      <div class="name">${esc(b.name)}</div>
+      <div class="strategy">${esc(b.strategy)}</div>
+      <div class="equity">${money(b.equity)}</div>
+      <div class="pnl ${pnlClass(pnl)}">${pct(pnlP)} · 已实现 ${money(b.realized_pnl)}</div>
+      <div class="grid">
+        <div class="k">现金</div><div class="v">${money(b.cash)}</div>
+        <div class="k">起始</div><div class="v">${money(b.start_cash)}</div>
+        <div class="k">成交</div><div class="v">${b.trade_count} · 胜${b.win_count}/负${b.loss_count}</div>
+        <div class="k">持仓</div><div class="v">${b.open_positions_count}</div>
+      </div>
+      ${traderHtml}
+      <div class="sizing">${esc(b.sizing_note || "")}</div>
+    </article>`;
+  }).join("");
+
+  const tbody = document.getElementById("events");
+  const rows = data.recent_events || [];
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--muted)">暂无事件</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map(e => {
+      const pnl = e.pnl;
+      let pnlCell = "—";
+      if (pnl != null && pnl !== "") {
+        const n = Number(pnl);
+        pnlCell = `<span class="pnl ${pnlClass(n)}">${n >= 0 ? "+" : ""}${n.toFixed(4)}</span>`;
+      }
+      const detail = e.msg || (e.handle ? "@" + e.handle : "") || (e.symbol || "") || "—";
+      return `<tr>
+        <td style="white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)">${esc((e.ts||"").replace("T"," ").slice(0,19))}</td>
+        <td>${esc(e.bot_name || e.bot_id || "")}</td>
+        <td><span class="${tagClass(e.type)}">${esc(e.type)}</span></td>
+        <td>${esc(detail)}</td>
+        <td>${pnlCell}</td>
+      </tr>`;
+    }).join("");
+  }
+}
+
+async function load() {
+  let lastErr;
+  for (const u of URLS) {
+    try {
+      const r = await fetch(u + (LIVE ? (u.includes("?") ? "&" : "?") + "t=" + Date.now() : ""), {cache: "no-store"});
+      if (!r.ok) throw new Error(u + " " + r.status);
+      const data = await r.json();
+      render(data);
+      return;
+    } catch (e) { lastErr = e; }
+  }
+  document.getElementById("cards").innerHTML = `<div class="err">无法加载数据：${esc(lastErr && lastErr.message)}</div>`;
+}
+
+load();
+if (LIVE) setInterval(load, 30000);
+else {
+  // GitHub Pages: still refresh latest.json periodically if user leaves tab open
+  setInterval(load, 60000);
+}
+</script>
+</body>
+</html>
