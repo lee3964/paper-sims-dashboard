@@ -121,6 +121,7 @@
   /* Skins are opt-in by bot id. Default bots get neither class. */
   .boan-only { display: none; }
   .savipww-only { display: none; }
+  .tenzo-only { display: none; }
   .brand, .subline, .badges { display: contents; }
 
   html.skin-boan {
@@ -520,24 +521,35 @@
     var botId = params.get("id") || "";
     if (botId === "0xboan") document.documentElement.classList.add("skin-boan");
     else if (botId === "savipww") document.documentElement.classList.add("skin-savipww");
+    else if (botId === "0xTenzo" || document.documentElement.getAttribute("data-bot") === "0xTenzo") {
+      document.documentElement.classList.add("skin-tenzo");
+      document.documentElement.setAttribute("data-bot", "0xTenzo");
+    }
   } catch (e) {}
 })();
 </script>
 <link rel="stylesheet" href="./savipww-desk.css" />
+<link rel="stylesheet" href="./tenzo-desk.css" />
 </head>
 <body>
 <canvas id="grid-canvas" class="boan-only" aria-hidden="true"></canvas>
 <div id="fx" class="boan-only" aria-hidden="true"></div>
+<div class="tenzo-bg tenzo-only" aria-hidden="true"></div>
+<div class="tenzo-grid tenzo-only" aria-hidden="true"></div>
+<div class="tenzo-scan tenzo-only" aria-hidden="true"></div>
 <header>
   <a class="back" href="./">← 返回对比</a>
   <div class="brand">
     <div class="logo boan-only" aria-hidden="true">0x</div>
+    <div class="tenzo-mark tenzo-only" aria-hidden="true"></div>
     <div class="desk-kicker savipww-only">对冲基金终端 · HEDGE FUND TERMINAL</div>
     <h1 id="title">模拟盘</h1>
   </div>
   <div class="badges">
     <span class="badge" id="badge">纸面 · PAPER ONLY</span>
     <span class="pill-live boan-only" id="live-pill" title="纸面终端 · 非实盘"><span class="dot"></span> LIVE</span>
+    <span class="tenzo-status tenzo-only" id="tenzo-status" hidden></span>
+    <span class="tenzo-live tenzo-only" id="tenzo-live"><span class="live-dot"></span><span class="live-label">LIVE</span></span>
   </div>
   <div class="subline">
     <span class="sub" id="strategy"></span>
@@ -607,6 +619,7 @@
     <div class="seat-rail" id="seat-rail"></div>
   </section>
   <div class="stats" id="stats"></div>
+  <div id="tenzo-sizing" class="tenzo-sizing tenzo-only"></div>
   <div class="panel" id="context"></div>
   <section>
     <h2>当前持仓 <span class="en boan-only">Open positions</span></h2>
@@ -654,11 +667,13 @@
   <footer id="footer">纸面模拟 · 非实盘</footer>
 </main>
 <script src="./savipww-desk.js"></script>
+<script src="./tenzo-desk.js"></script>
 <script>
 const KNOWN = ["0xboan", "0xTenzo", "savipww"];
 const id = new URLSearchParams(location.search).get("id") || "";
 const SKIN_BOAN = id === "0xboan";
 const SKIN_SAVIPWW = id === "savipww";
+const SKIN_TENZO = id === "0xTenzo" || document.documentElement.classList.contains("skin-tenzo");
 const TYPE_ZH = { open: "开仓", close: "平仓", skip: "跳过", hire: "雇佣", fire: "解雇", rules_update: "规则" };
 const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const LIVE = location.port === "8765" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
@@ -778,6 +793,10 @@ function tickSpan(value, mode, cls) {
 }
 
 function renderStats(b) {
+  if (SKIN_TENZO && window.TenzoDesk) {
+    TenzoDesk.paintStats(b);
+    return;
+  }
   const pnl = b.equity - b.start_cash;
   const pnlP = b.start_cash ? (pnl / b.start_cash) * 100 : 0;
   const box = document.getElementById("stats");
@@ -832,6 +851,10 @@ function sizingCard(b) {
 }
 function renderContext(b) {
   const el = document.getElementById("context");
+  if (SKIN_TENZO && window.TenzoDesk) {
+    TenzoDesk.paintContext(b);
+    return;
+  }
   if (SKIN_BOAN) {
     const trades = b.trade_count ?? 0;
     let traderHtml;
@@ -879,7 +902,7 @@ function renderContext(b) {
 function renderPositions(rows) {
   const body = document.getElementById("positions");
   if (!rows.length) {
-    const msg = SKIN_BOAN ? "暂无持仓 · 等待跟单信号" : SKIN_SAVIPWW ? "暂无持仓 · 重置前的纸面成交只留在流水里" : "暂无持仓";
+    const msg = SKIN_BOAN ? "暂无持仓 · 等待跟单信号" : SKIN_SAVIPWW ? "暂无持仓 · 重置前的纸面成交只留在流水里" : SKIN_TENZO ? "暂无持仓 — 等待跟单信号" : "暂无持仓";
     body.innerHTML = `<tr><td colspan="8" class="empty">${msg}</td></tr>`;
     return;
   }
@@ -947,7 +970,7 @@ function renderEvents() {
       <td class="num" data-label="价格">${pxFmt(e.price)}</td>
       <td class="num" data-label="名义">${money(e.notional_usd)}</td>
       <td class="num" data-label="盈亏">${pnlCell(e.pnl, e.pnl_pct)}</td>
-      <td data-label="说明">${esc(e.msg || "—")}${esc(fee)}</td>
+      <td data-label="说明">${esc(SKIN_TENZO ? (e.msg || e.note || "—") : (e.msg || "—"))}${esc(fee)}</td>
     </tr>`;
   }).join("");
 }
@@ -955,10 +978,12 @@ function renderEvents() {
 function renderFilters() {
   const box = document.getElementById("filters");
   const archivedN = state.events.filter(e => e.archived).length;
+  const filterRows = (SKIN_TENZO && window.TenzoDesk) ? TenzoDesk.filterRows(FILTERS, state.events) : FILTERS;
+  if (!filterRows.some(([k]) => k === state.filter)) state.filter = "all";
   const seatClear = SKIN_SAVIPWW && state.seat
     ? `<button type="button" data-seat-clear class="on">清除席位 · ${esc(window.SavipwwDesk ? SavipwwDesk.seatLabel(state.seat) : state.seat)}</button>`
     : "";
-  box.innerHTML = FILTERS.map(([k, label]) =>
+  box.innerHTML = filterRows.map(([k, label]) =>
     `<button type="button" data-filter="${k}" class="${state.filter === k ? "on" : ""}">${label}</button>`
   ).join("") + seatClear + (archivedN
     ? `<label class="check"><input type="checkbox" id="arch" ${state.showArchived ? "checked" : ""}/> 显示重置前</label>`
@@ -986,7 +1011,7 @@ function renderFilters() {
 
 function render(data) {
   const b = data.bot || {};
-  document.title = (b.name || id) + (SKIN_SAVIPWW ? " · 八席终端" : " · 模拟盘详情");
+  document.title = (b.name || id) + (SKIN_SAVIPWW ? " · 八席终端" : SKIN_TENZO ? " · 高清交易台" : " · 模拟盘详情");
   document.getElementById("title").textContent = b.name || id;
   document.getElementById("strategy").textContent = b.strategy || "";
   const whenText = "更新 " + (data.generated_at || b.updated_at || "—") + " · " + (data.timezone || "SGT");
@@ -999,6 +1024,8 @@ function render(data) {
     if (window.SavipwwDesk) {
       try { SavipwwDesk.update(b); } catch (err) { console.error(err); }
     }
+  } else if (SKIN_TENZO && window.TenzoDesk) {
+    TenzoDesk.paintChrome(b, whenText);
   } else {
     meta.textContent = whenText;
   }
@@ -1008,11 +1035,13 @@ function render(data) {
   state.events = b.events || b.recent_events || [];
   renderFilters();
   renderEvents();
-  document.getElementById("footer").textContent =
+  if (SKIN_TENZO && window.TenzoDesk) TenzoDesk.paintFooter(b, data);
+  else document.getElementById("footer").textContent =
     "纸面模拟 · 非实盘 · " + (b.source_path || "") + (data.note ? " · " + data.note : "");
 }
 
 function showMissing() {
+  if (SKIN_TENZO && window.TenzoDesk) TenzoDesk.setLive(false);
   document.getElementById("title").textContent = "未找到模拟盘";
   document.getElementById("meta").textContent = "纸面 · PAPER ONLY";
   const links = KNOWN.map(k => `<a href="./bot.html?id=${encodeURIComponent(k)}">${esc(k)}</a>`).join("");
@@ -1117,8 +1146,11 @@ async function load() {
       }
     }
     if (missing) showMissing();
-    else document.getElementById("main").innerHTML =
-      `<div class="err">无法加载 ${esc(id)}：${esc(lastErr && lastErr.message)}</div>`;
+    else {
+      if (SKIN_TENZO && window.TenzoDesk) TenzoDesk.setLive(false);
+      document.getElementById("main").innerHTML =
+        `<div class="err">无法加载 ${esc(id)}：${esc(lastErr && lastErr.message)}</div>`;
+    }
   } finally {
     if (SKIN_BOAN) document.documentElement.classList.remove("is-loading");
   }
@@ -1139,6 +1171,7 @@ if (SKIN_SAVIPWW && window.SavipwwDesk) {
 }
 load();
 if (SKIN_SAVIPWW) setInterval(load, LIVE ? 30000 : 60000);
+if (SKIN_TENZO) setInterval(load, location.port === "8765" ? 15000 : 60000);
 </script>
 </body>
 </html>
