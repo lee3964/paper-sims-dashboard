@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>模拟盘详情 · Paper</title>
 <style>
   :root {
@@ -117,6 +117,390 @@
   .err { color: var(--red); padding: 1rem; }
   .picker a { color: var(--blue); margin-right: .8rem; }
   footer { color: var(--muted); font-size: .72rem; margin-top: 1.2rem; }
+
+  /* 0xboan only. Default bots never get html.skin-boan. */
+  .boan-only { display: none; }
+  .brand, .subline, .badges { display: contents; }
+
+  html.skin-boan {
+    --bg: #05080d;
+    --bg1: #0a1018;
+    --panel: rgba(14, 22, 34, 0.72);
+    --panel-solid: #0e1622;
+    --panel2: rgba(18, 28, 42, 0.92);
+    --border: rgba(80, 140, 180, 0.18);
+    --border-glow: rgba(79, 209, 197, 0.35);
+    --text: #eaf2fb;
+    --muted: #8fa3b8;
+    --faint: #5d738a;
+    --cyan: #4fd1c5;
+    --cyan2: #7ee8df;
+    --green: #3dd68c;
+    --green-dim: rgba(61, 214, 140, 0.15);
+    --red: #ff6b7a;
+    --red-dim: rgba(255, 107, 122, 0.14);
+    --amber: #f5c542;
+    --amber-dim: rgba(245, 197, 66, 0.14);
+    --blue: #5b9dff;
+    --purple: #b388ff;
+    --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    --radius: 16px;
+    --mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+  html.skin-boan body {
+    font-family: "SF Pro Display", "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: var(--bg);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  html.skin-boan #fx {
+    display: block;
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(900px 500px at 8% -5%, rgba(79, 209, 197, 0.12), transparent 55%),
+      radial-gradient(700px 420px at 92% 8%, rgba(91, 157, 255, 0.10), transparent 50%),
+      radial-gradient(800px 500px at 50% 110%, rgba(179, 136, 255, 0.07), transparent 45%),
+      linear-gradient(180deg, var(--bg1), var(--bg));
+  }
+  html.skin-boan #grid-canvas {
+    display: block;
+    position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.45;
+  }
+  html.skin-boan header,
+  html.skin-boan main { position: relative; z-index: 2; }
+  html.skin-boan header {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "back logo title badges meta"
+      "back logo strategy badges meta";
+    align-items: center;
+    width: calc(100% - 2.5rem);
+    max-width: calc(1480px - 2.5rem);
+    margin: 1.25rem auto 0;
+    padding: 1rem 1.25rem;
+    column-gap: 1rem;
+    row-gap: .15rem;
+    background: var(--panel);
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+    animation: boan-enter .55s cubic-bezier(.22,1,.36,1) both;
+  }
+  html.skin-boan main {
+    max-width: 1480px;
+    padding: 1rem 1.25rem 3rem;
+  }
+  @media (min-width: 1920px) {
+    html.skin-boan header { max-width: calc(1680px - 3rem); }
+    html.skin-boan main { max-width: 1680px; padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 2560px) {
+    html.skin-boan header { max-width: calc(2100px - 4rem); }
+    html.skin-boan main { max-width: 2100px; padding-left: 2rem; padding-right: 2rem; }
+  }
+  html.skin-boan .back {
+    grid-area: back;
+    color: var(--cyan);
+    background: rgba(79, 209, 197, 0.08);
+    border-color: rgba(79, 209, 197, 0.28);
+  }
+  html.skin-boan .back:hover { background: rgba(79, 209, 197, 0.16); }
+  html.skin-boan .brand { display: contents; }
+  html.skin-boan .logo {
+    grid-area: logo;
+    display: grid; place-items: center;
+    width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+    background: linear-gradient(145deg, rgba(79,209,197,.35), rgba(91,157,255,.2));
+    border: 1px solid var(--border-glow);
+    box-shadow: 0 0 24px rgba(79,209,197,.25);
+    font-weight: 800; font-size: .85rem; letter-spacing: -.02em; color: var(--cyan2);
+  }
+  html.skin-boan header h1 {
+    grid-area: title;
+    font-size: 1.2rem; font-weight: 700; letter-spacing: .01em;
+    min-width: 0;
+  }
+  html.skin-boan .subline {
+    grid-area: strategy;
+    display: flex; flex-wrap: wrap; gap: .35rem .65rem; align-items: center;
+    color: var(--muted); font-size: .78rem;
+    min-width: 0;
+  }
+  html.skin-boan header .sub { flex: none; color: var(--muted); font-size: .78rem; }
+  html.skin-boan .source { display: inline; }
+  html.skin-boan .source a { color: var(--cyan); text-decoration: none; }
+  html.skin-boan .source a:hover { text-decoration: underline; }
+  html.skin-boan .badges {
+    grid-area: badges;
+    display: flex; flex-wrap: wrap; gap: .4rem; align-items: center;
+    justify-content: flex-end;
+  }
+  html.skin-boan .badge {
+    display: inline-flex; align-items: center;
+    padding: .22rem .65rem; border-radius: 999px;
+    background: var(--amber-dim); color: var(--amber);
+    border: 1px solid rgba(245,197,66,.35);
+    box-shadow: 0 0 16px rgba(245,197,66,.12);
+    font-size: .68rem; font-weight: 700; letter-spacing: .04em;
+  }
+  html.skin-boan .pill-live {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .22rem .65rem; border-radius: 999px;
+    background: var(--green-dim); color: var(--green);
+    border: 1px solid rgba(61,214,140,.35);
+    font-size: .68rem; font-weight: 700; letter-spacing: .04em;
+  }
+  html.skin-boan .pill-live .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: boan-pulse 1.6s ease-in-out infinite;
+  }
+  html.skin-boan header .meta {
+    grid-area: meta;
+    margin-left: 0; text-align: right;
+    font-family: var(--mono); font-size: .75rem;
+  }
+  html.skin-boan .refresh {
+    display: inline-flex; align-items: center; gap: .35rem; margin-top: .2rem;
+    color: var(--faint);
+  }
+  html.skin-boan .spin {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 1.5px solid rgba(79,209,197,.25);
+    border-top-color: var(--cyan);
+    display: inline-block; opacity: 0;
+  }
+  html.skin-boan.is-loading .spin { opacity: 1; animation: boan-spin .7s linear infinite; }
+  html.skin-boan .stats { gap: .75rem; margin: 1.15rem 0 1.25rem; }
+  html.skin-boan .stat {
+    position: relative;
+    background: var(--panel);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: .9rem 1rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    animation: boan-enter .6s cubic-bezier(.22,1,.36,1) both;
+  }
+  html.skin-boan .stat:nth-child(1) { animation-delay: .04s; }
+  html.skin-boan .stat:nth-child(2) { animation-delay: .08s; }
+  html.skin-boan .stat:nth-child(3) { animation-delay: .12s; }
+  html.skin-boan .stat:nth-child(4) { animation-delay: .16s; }
+  html.skin-boan .stat:nth-child(5) { animation-delay: .20s; }
+  html.skin-boan .stat:nth-child(6) { animation-delay: .24s; }
+  html.skin-boan .stat:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-glow);
+    box-shadow: 0 16px 48px rgba(0,0,0,.5), 0 0 28px rgba(79,209,197,.08);
+  }
+  html.skin-boan .stat::after {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--cyan), transparent);
+    opacity: .7;
+  }
+  html.skin-boan .stat .k {
+    color: var(--muted); font-size: .7rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem;
+  }
+  html.skin-boan .stat .v {
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    font-weight: 750; letter-spacing: -.03em; line-height: 1.15;
+    font-family: var(--mono);
+  }
+  html.skin-boan .stat .v.lg { font-size: clamp(1.15rem, 1.6vw, 1.45rem); }
+  html.skin-boan .stat .hint { color: var(--faint); font-size: .68rem; margin-top: .3rem; }
+  html.skin-boan .kpi-denom {
+    color: var(--muted); font-weight: 500; font-size: .85rem;
+  }
+  html.skin-boan #context.split {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    animation: boan-enter .65s cubic-bezier(.22,1,.36,1) both;
+    animation-delay: .28s;
+  }
+  html.skin-boan .glass-card {
+    position: relative;
+    background: var(--panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.15rem 1.25rem 1.3rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: border-color .25s, box-shadow .25s, transform .25s;
+  }
+  html.skin-boan .glass-card:hover {
+    border-color: rgba(79,209,197,.32);
+    box-shadow: 0 18px 50px rgba(0,0,0,.5), 0 0 32px rgba(79,209,197,.06);
+  }
+  html.skin-boan .glass-card::before {
+    content: "";
+    position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79,209,197,.45), transparent);
+  }
+  html.skin-boan .glass-card h2 {
+    margin: 0 0 1rem; font-size: .92rem; font-weight: 700;
+    display: flex; align-items: center; gap: .55rem;
+  }
+  html.skin-boan .en {
+    display: inline;
+    color: var(--faint); font-weight: 500; font-size: .72rem; letter-spacing: 0;
+    text-transform: none;
+  }
+  html.skin-boan .trader-handle {
+    font-size: 1.55rem; font-weight: 800; margin: 0 0 .2rem; letter-spacing: -.02em;
+  }
+  html.skin-boan .trader-handle a {
+    color: var(--cyan2); text-decoration: none;
+    text-shadow: 0 0 24px rgba(79,209,197,.35);
+  }
+  html.skin-boan .trader-handle a:hover { text-decoration: underline; }
+  html.skin-boan .trader-meta {
+    display: grid; grid-template-columns: auto 1fr; gap: .4rem 1rem;
+    font-size: .82rem; margin-top: .85rem;
+  }
+  html.skin-boan .trader-meta .k { color: var(--muted); }
+  html.skin-boan .trader-meta .v {
+    font-variant-numeric: tabular-nums; font-family: var(--mono);
+  }
+  html.skin-boan .sizing-copy { font-size: .84rem; line-height: 1.65; color: var(--muted); }
+  html.skin-boan .sizing-copy b { color: var(--text); font-weight: 650; }
+  html.skin-boan .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .85rem; }
+  html.skin-boan .chip {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .28rem .7rem; border-radius: 999px;
+    background: rgba(79,209,197,.08);
+    border: 1px solid rgba(79,209,197,.28);
+    font-size: .72rem; font-weight: 700; color: var(--cyan);
+    font-variant-numeric: tabular-nums; font-family: var(--mono);
+  }
+  html.skin-boan .chip.amber {
+    color: var(--amber); background: var(--amber-dim); border-color: rgba(245,197,66,.3);
+  }
+  html.skin-boan section {
+    margin-bottom: 1.35rem;
+    animation: boan-enter .7s cubic-bezier(.22,1,.36,1) both;
+  }
+  html.skin-boan section:nth-of-type(1) { animation-delay: .32s; }
+  html.skin-boan section:nth-of-type(2) { animation-delay: .4s; }
+  html.skin-boan section h2 { font-size: .95rem; font-weight: 700; }
+  html.skin-boan #ev-count {
+    margin-left: auto;
+    font-family: var(--mono);
+    padding: .15rem .5rem; border-radius: 999px;
+    background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  }
+  html.skin-boan .note {
+    padding: .65rem .75rem; border-radius: 10px;
+    background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  }
+  html.skin-boan .filters button,
+  html.skin-boan .check {
+    background: rgba(18, 28, 42, 0.88);
+    border-color: var(--border);
+    transition: border-color .2s, background .2s, color .2s;
+  }
+  html.skin-boan .filters button.on {
+    color: var(--cyan2);
+    border-color: rgba(79,209,197,.45);
+    background: rgba(79,209,197,.1);
+    box-shadow: 0 0 16px rgba(79,209,197,.12);
+  }
+  html.skin-boan .table-wrap {
+    border-radius: 14px;
+    background: var(--panel-solid);
+    box-shadow: var(--shadow);
+    max-height: min(480px, 55vh);
+  }
+  html.skin-boan th, html.skin-boan td { border-bottom-color: rgba(80,140,180,.1); }
+  html.skin-boan th {
+    font-size: .7rem; letter-spacing: .05em; text-transform: uppercase;
+    background: rgba(18, 28, 42, 0.95);
+    backdrop-filter: blur(8px);
+  }
+  html.skin-boan td.num, html.skin-boan th.num { font-family: var(--mono); }
+  html.skin-boan tbody tr { transition: background .15s; }
+  html.skin-boan tbody tr:hover { background: rgba(79,209,197,.04); }
+  html.skin-boan .tag { letter-spacing: .04em; font-weight: 750; }
+  html.skin-boan .tag-open { background: rgba(91,157,255,.15); color: var(--blue); }
+  html.skin-boan .tag-close { background: rgba(179,136,255,.15); color: var(--purple); }
+  html.skin-boan .tag-skip { background: var(--amber-dim); color: var(--amber); }
+  html.skin-boan .tag-hire { background: var(--green-dim); color: var(--green); }
+  html.skin-boan .tag-fire { background: var(--red-dim); color: var(--red); }
+  html.skin-boan .tag-rules_update { background: rgba(79,209,197,.12); color: var(--cyan); }
+  html.skin-boan footer {
+    color: var(--faint); text-align: center; line-height: 1.55;
+    margin-top: 1.75rem; padding: 1rem; border-top: 1px solid var(--border);
+  }
+  html.skin-boan .err {
+    background: var(--red-dim); border-radius: 12px; border: 1px solid rgba(255,107,122,.3);
+  }
+  html.skin-boan a:focus-visible,
+  html.skin-boan button:focus-visible {
+    outline: 2px solid var(--cyan); outline-offset: 2px;
+  }
+  @media (max-width: 1200px) {
+    html.skin-boan .stats { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 900px) {
+    html.skin-boan #context.split { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    html.skin-boan header {
+      width: calc(100% - 1.5rem);
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-areas:
+        "back badges"
+        "logo title"
+        "logo strategy"
+        "meta meta";
+    }
+    html.skin-boan .badges { justify-content: flex-end; }
+    html.skin-boan header .meta { text-align: left; }
+  }
+  @media (max-width: 640px) {
+    html.skin-boan .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 720px) {
+    html.skin-boan .wide td { padding: .18rem 0; }
+  }
+  @keyframes boan-enter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes boan-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .45; transform: scale(.85); }
+  }
+  @keyframes boan-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    html.skin-boan { scroll-behavior: auto; }
+    html.skin-boan *, html.skin-boan *::before, html.skin-boan *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    html.skin-boan .stat:hover,
+    html.skin-boan .glass-card:hover { transform: none; }
+    html.skin-boan #grid-canvas { display: none !important; }
+  }
+
   @media (max-width: 720px) {
     .wide thead { display: none; }
     .wide tr { display: block; padding: .65rem .75rem; border-bottom: 1px solid var(--border); }
@@ -128,20 +512,39 @@
     .wide td.num { text-align: right; }
   }
 </style>
+<script>
+(function () {
+  try {
+    var params = new URLSearchParams(location.search);
+    if ((params.get("id") || "") === "0xboan") document.documentElement.classList.add("skin-boan");
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
+<canvas id="grid-canvas" class="boan-only" aria-hidden="true"></canvas>
+<div id="fx" class="boan-only" aria-hidden="true"></div>
 <header>
   <a class="back" href="./">← 返回对比</a>
-  <h1 id="title">模拟盘</h1>
-  <span class="badge">纸面 · PAPER ONLY</span>
-  <span class="sub" id="strategy"></span>
-  <div class="meta" id="meta">加载中…</div>
+  <div class="brand">
+    <div class="logo boan-only" aria-hidden="true">0x</div>
+    <h1 id="title">模拟盘</h1>
+  </div>
+  <div class="badges">
+    <span class="badge" id="badge">纸面 · PAPER ONLY</span>
+    <span class="pill-live boan-only" id="live-pill" title="纸面终端 · 非实盘"><span class="dot"></span> LIVE</span>
+  </div>
+  <div class="subline">
+    <span class="sub" id="strategy"></span>
+    <span class="source boan-only">· 源 <a href="https://x.com/0xboan" target="_blank" rel="noopener">@0xboan</a></span>
+  </div>
+  <div class="meta" id="meta"><span class="spin boan-only" id="spin" aria-hidden="true"></span>加载中…</div>
 </header>
 <main id="main">
   <div class="stats" id="stats"></div>
   <div class="panel" id="context"></div>
   <section>
-    <h2>当前持仓</h2>
+    <h2>当前持仓 <span class="en boan-only">Open positions</span></h2>
     <div class="table-wrap">
       <table class="wide" id="pos-table">
         <thead>
@@ -161,7 +564,7 @@
     </div>
   </section>
   <section style="margin-top:1.2rem">
-    <h2>交易流水 <span id="ev-count" class="sub" style="font-weight:400;color:var(--muted)"></span></h2>
+    <h2>交易流水 <span class="en boan-only">Events</span> <span id="ev-count" class="sub" style="font-weight:400;color:var(--muted)"></span></h2>
     <p class="note" id="hist-note" hidden>账本数字是当前纸面结存。流水里标「重置前」的记录来自重置时归档的 jsonl，不回写到当前权益。纸面模拟，没有实盘委托。</p>
     <div class="filters" id="filters"></div>
     <div class="table-wrap">
@@ -188,6 +591,8 @@
 <script>
 const KNOWN = ["0xboan", "0xTenzo", "savipww"];
 const id = new URLSearchParams(location.search).get("id") || "";
+const SKIN_BOAN = id === "0xboan";
+const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const LIVE = location.port === "8765" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
 const URLS = id
   ? (LIVE
@@ -253,9 +658,74 @@ function pnlCell(pnl, pnlPct) {
   return `<span class="${pnlClass(n)}">${n >= 0 ? "+" : ""}${n.toFixed(4)}</span>${extra}`;
 }
 
+function formatTick(v, mode) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return "—";
+  if (mode === "int") return String(Math.round(n));
+  if (mode === "pct") return pct(n);
+  if (mode === "signed") {
+    const body = money(Math.abs(n));
+    if (n > 0.0001) return "+" + body;
+    if (n < -0.0001) return "-" + body;
+    return body;
+  }
+  return money(n);
+}
+function animateNumber(el, target, mode) {
+  const finalText = formatTick(target, mode);
+  if (REDUCE || document.hidden || !Number.isFinite(target) || Math.abs(target) < 0.005) {
+    el.textContent = finalText;
+    return;
+  }
+  const start = performance.now();
+  const dur = 720;
+  let settled = false;
+  function settle() {
+    if (settled) return;
+    settled = true;
+    el.textContent = finalText;
+  }
+  function frame(now) {
+    if (settled) return;
+    const t = Math.min(1, (now - start) / dur);
+    if (t >= 1) {
+      settle();
+      return;
+    }
+    el.textContent = formatTick(target * (1 - Math.pow(1 - t, 3)), mode);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  setTimeout(settle, dur + 80);
+}
+function runTicks(root) {
+  root.querySelectorAll("[data-tick]").forEach(el => {
+    animateNumber(el, Number(el.dataset.tick), el.dataset.tickMode || "money");
+  });
+}
+function tickSpan(value, mode, cls) {
+  const n = Number(value);
+  const safe = Number.isFinite(n) ? n : 0;
+  return `<span class="${cls || ""}" data-tick="${safe}" data-tick-mode="${mode}">${formatTick(safe, mode)}</span>`;
+}
+
 function renderStats(b) {
   const pnl = b.equity - b.start_cash;
   const pnlP = b.start_cash ? (pnl / b.start_cash) * 100 : 0;
+  const box = document.getElementById("stats");
+  if (SKIN_BOAN) {
+    const posN = b.open_positions_count ?? (b.open_positions || []).length;
+    const streak = b.consecutive_losses ?? 0;
+    box.innerHTML = `
+      <div class="stat"><div class="k">权益 Equity</div><div class="v lg">${tickSpan(b.equity, "money")}</div><div class="hint">起始 ${money(b.start_cash)}</div></div>
+      <div class="stat"><div class="k">现金 Cash</div><div class="v">${tickSpan(b.cash, "money")}</div><div class="hint">可用现金</div></div>
+      <div class="stat"><div class="k">总盈亏 Total PnL</div><div class="v ${pnlClass(pnl)}">${tickSpan(pnl, "signed")}</div><div class="hint ${pnlClass(pnlP)}">${pct(pnlP)}</div></div>
+      <div class="stat"><div class="k">已实现 Realized</div><div class="v ${pnlClass(b.realized_pnl)}">${tickSpan(b.realized_pnl, "signed")}</div><div class="hint">账本结存</div></div>
+      <div class="stat"><div class="k">成交 / 胜负</div><div class="v">${tickSpan(b.trade_count ?? 0, "int")}</div><div class="hint">胜 ${b.win_count ?? 0} · 负 ${b.loss_count ?? 0}</div></div>
+      <div class="stat"><div class="k">连亏 / 持仓</div><div class="v">${tickSpan(streak, "int")}<span class="kpi-denom"> / ${tickSpan(posN, "int")}</span></div><div class="hint">连亏次数 / 持仓笔数</div></div>`;
+    runTicks(box);
+    return;
+  }
   const cells = [
     ["权益", money(b.equity), "lg " + pnlClass(pnl)],
     ["现金", money(b.cash), ""],
@@ -264,12 +734,67 @@ function renderStats(b) {
     ["胜 / 负", `${b.win_count} / ${b.loss_count}`, ""],
     ["持仓", String(b.open_positions_count ?? (b.open_positions || []).length), ""],
   ];
-  document.getElementById("stats").innerHTML = cells.map(([k, v, cls]) =>
+  box.innerHTML = cells.map(([k, v, cls]) =>
     `<div class="stat"><div class="k">${k}</div><div class="v ${cls}">${v}</div></div>`
   ).join("");
 }
 
+function sizingCard(b) {
+  const note = b.sizing_note || "";
+  const head = note.split(/上限/)[0] || note;
+  const ratioM = head.match(/[×x*]\s*(0?\.\d+)/i);
+  const fracM = note.match(/未知[\s\S]{0,16}?权益\s*[×x*]\s*(0?\.\d+)/i)
+    || note.match(/否则[\s\S]{0,16}?权益\s*[×x*]\s*(0?\.\d+)/i);
+  const capM = note.match(/上限[\s\S]{0,16}?[×x*]\s*(0?\.\d+)/i);
+  const lines = [];
+  if (ratioM) lines.push(`已知对方下单额 → <b>单笔 = ${Math.round(Number(ratioM[1]) * 100)}% × 对方额</b>`);
+  if (fracM) {
+    const frac = Number(fracM[1]);
+    const approx = Number.isFinite(Number(b.equity)) ? money(Number(b.equity) * frac) : "—";
+    lines.push(`未知 → <b>权益 × ${Math.round(frac * 100)}%</b>（当前 ≈ ${approx}）`);
+  }
+  if (capM) lines.push(`单笔上限 <b>权益 ${Math.round(Number(capM[1]) * 100)}%</b>`);
+  const copy = lines.length
+    ? `<div class="sizing-copy">${lines.join("<br/>")}</div>`
+    : `<div class="sizing-copy">${esc(note || "暂无仓位说明")}</div>`;
+  const chips = note.split(/[；;]/).map(s => s.trim()).filter(Boolean)
+    .map(s => `<span class="chip">${esc(s)}</span>`).join("");
+  const loss = /两连亏/.test(b.strategy || "") ? `<span class="chip amber">两连亏换人</span>` : "";
+  return `${copy}<div class="chips">${chips}${loss}</div>`;
+}
 function renderContext(b) {
+  const el = document.getElementById("context");
+  if (SKIN_BOAN) {
+    const trades = b.trade_count ?? 0;
+    let traderHtml;
+    if (b.current_trader) {
+      const handle = String(b.current_trader).replace(/^@/, "");
+      traderHtml = `
+        <div class="trader-handle"><a href="https://x.com/${esc(handle)}" target="_blank" rel="noopener">@${esc(handle)}</a></div>
+        <div class="trader-meta">
+          <div class="k">连亏</div><div class="v">${esc(b.consecutive_losses ?? 0)}</div>
+          <div class="k">成交</div><div class="v">${esc(trades)}</div>
+          <div class="k">胜 / 负</div><div class="v">${esc(b.win_count ?? 0)} / ${esc(b.loss_count ?? 0)}</div>
+          <div class="k">更新</div><div class="v">${when(b.updated_at) || "—"}</div>
+        </div>`;
+    } else if (b.seats && b.seats.length) {
+      traderHtml = `<div class="trader-handle">策略台</div><div class="chips">${b.seats.map(s => `<span class="chip">${esc(s)}</span>`).join("")}</div>`;
+    } else {
+      traderHtml = `<div class="empty" style="text-align:left;padding:.2rem 0">暂无跟单对象</div>`;
+    }
+    el.classList.add("split");
+    el.innerHTML = `
+      <article class="glass-card">
+        <h2>当前交易员 <span class="en">Current trader</span></h2>
+        ${traderHtml}
+      </article>
+      <article class="glass-card">
+        <h2>动态仓位 <span class="en">Sizing</span></h2>
+        ${sizingCard(b)}
+      </article>`;
+    return;
+  }
+  el.classList.remove("split");
   let who;
   if (b.current_trader) {
     who = `当前跟单 <a href="https://x.com/${esc(b.current_trader)}" target="_blank" rel="noopener">@${esc(b.current_trader)}</a> · 连亏 <b>${b.consecutive_losses ?? 0}</b>`;
@@ -279,14 +804,15 @@ function renderContext(b) {
     who = "策略台 · 无跟单对象";
   }
   const trades = `成交 ${b.trade_count ?? 0}`;
-  document.getElementById("context").innerHTML =
+  el.innerHTML =
     `<div class="trader">${who} · ${trades}</div><div class="sizing">${esc(b.sizing_note || "")}</div>`;
 }
 
 function renderPositions(rows) {
   const body = document.getElementById("positions");
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="8" class="empty">暂无持仓</td></tr>`;
+    const msg = SKIN_BOAN ? "暂无持仓 · 等待跟单信号" : "暂无持仓";
+    body.innerHTML = `<tr><td colspan="8" class="empty">${msg}</td></tr>`;
     return;
   }
   body.innerHTML = rows.map(p => {
@@ -375,7 +901,14 @@ function render(data) {
   document.title = (b.name || id) + " · 模拟盘详情";
   document.getElementById("title").textContent = b.name || id;
   document.getElementById("strategy").textContent = b.strategy || "";
-  document.getElementById("meta").textContent = "更新 " + (data.generated_at || b.updated_at || "—") + " · " + (data.timezone || "SGT");
+  const whenText = "更新 " + (data.generated_at || b.updated_at || "—") + " · " + (data.timezone || "SGT");
+  const meta = document.getElementById("meta");
+  if (SKIN_BOAN) {
+    document.documentElement.classList.remove("is-loading");
+    meta.innerHTML = `<div class="meta-time">${esc(whenText)}</div><div class="refresh"><span class="spin" id="spin" aria-hidden="true"></span>${LIVE ? "本地接口" : "静态快照"}</div>`;
+  } else {
+    meta.textContent = whenText;
+  }
   renderStats(b);
   renderContext(b);
   renderPositions(b.open_positions || []);
@@ -394,37 +927,116 @@ function showMissing() {
     `<div class="panel"><div class="err">未找到该模拟盘${id ? "：" + esc(id) : ""}。</div><p class="picker">${links}</p></div>`;
 }
 
-async function load() {
-  if (!id || URLS.length === 0) {
-    showMissing();
-    return;
+let ambientOn = false;
+let ambientResize = null;
+function motionReduced() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+function stopAmbient() {
+  if (window.__boanRaf) cancelAnimationFrame(window.__boanRaf);
+  window.__boanRaf = 0;
+  if (ambientResize) window.removeEventListener("resize", ambientResize);
+  ambientResize = null;
+  ambientOn = false;
+}
+function startAmbient() {
+  if (!SKIN_BOAN || motionReduced() || ambientOn) return;
+  const canvas = document.getElementById("grid-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ambientOn = true;
+  let particles = [];
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.min(48, Math.floor((window.innerWidth * window.innerHeight) / 45000));
+    particles = Array.from({ length: n }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: 0.6 + Math.random() * 1.4,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: -0.05 - Math.random() * 0.12,
+      a: 0.15 + Math.random() * 0.35,
+    }));
   }
-  let lastErr;
-  let missing = true;
-  for (const u of URLS) {
-    try {
-      const r = await fetch(u + (u.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
-      if (r.status === 404) {
-        lastErr = new Error("404");
-        continue;
-      }
-      if (!r.ok) throw new Error(u + " " + r.status);
-      const data = await r.json();
-      if (!data.bot) {
-        lastErr = new Error("empty");
-        continue;
-      }
-      missing = false;
-      render(data);
-      return;
-    } catch (e) {
-      missing = false;
-      lastErr = e;
+  function drawFrame() {
+    if (!ambientOn) return;
+    const w = window.innerWidth, h = window.innerHeight;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = "rgba(79,209,197,0.04)";
+    ctx.lineWidth = 1;
+    const step = 56;
+    ctx.beginPath();
+    for (let x = 0; x < w; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
+    for (let y = 0; y < h; y += step) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
+    ctx.stroke();
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -4) { p.y = h + 4; p.x = Math.random() * w; }
+      if (p.x < -4) p.x = w + 4;
+      if (p.x > w + 4) p.x = -4;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(126,232,223,${p.a})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
     }
+    window.__boanRaf = requestAnimationFrame(drawFrame);
   }
-  if (missing) showMissing();
-  else document.getElementById("main").innerHTML =
-    `<div class="err">无法加载 ${esc(id)}：${esc(lastErr && lastErr.message)}</div>`;
+  resize();
+  ambientResize = resize;
+  window.addEventListener("resize", resize);
+  drawFrame();
+}
+
+async function load() {
+  if (SKIN_BOAN) document.documentElement.classList.add("is-loading");
+  try {
+    if (!id || URLS.length === 0) {
+      showMissing();
+      return;
+    }
+    let lastErr;
+    let missing = true;
+    for (const u of URLS) {
+      try {
+        const r = await fetch(u + (u.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+        if (r.status === 404) {
+          lastErr = new Error("404");
+          continue;
+        }
+        if (!r.ok) throw new Error(u + " " + r.status);
+        const data = await r.json();
+        if (!data.bot) {
+          lastErr = new Error("empty");
+          continue;
+        }
+        missing = false;
+        render(data);
+        return;
+      } catch (e) {
+        missing = false;
+        lastErr = e;
+      }
+    }
+    if (missing) showMissing();
+    else document.getElementById("main").innerHTML =
+      `<div class="err">无法加载 ${esc(id)}：${esc(lastErr && lastErr.message)}</div>`;
+  } finally {
+    if (SKIN_BOAN) document.documentElement.classList.remove("is-loading");
+  }
+}
+if (SKIN_BOAN && !motionReduced()) startAmbient();
+const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+if (SKIN_BOAN && motionQuery.addEventListener) {
+  motionQuery.addEventListener("change", () => {
+    if (motionQuery.matches) stopAmbient();
+    else startAmbient();
+  });
 }
 load();
 </script>
