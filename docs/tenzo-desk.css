@@ -1,0 +1,505 @@
+/* 0xTenzo HD paper desk. Scoped to html.skin-tenzo so 0xboan and savipww stay as they are. */
+
+html.skin-tenzo,
+html[data-bot="0xTenzo"] {
+  --bg0: #06090e;
+  --bg1: #0a1018;
+  --panel: rgba(14, 22, 34, 0.82);
+  --panel2: #121c2b;
+  --border: rgba(80, 120, 180, 0.22);
+  --border-bright: rgba(110, 170, 255, 0.35);
+  --text: #eaf2fb;
+  --muted: #8296ad;
+  --dim: #5a6e84;
+  --green: #2ee59d;
+  --green-dim: rgba(46, 229, 157, 0.14);
+  --red: #ff5d75;
+  --red-dim: rgba(255, 93, 117, 0.14);
+  --amber: #f5c542;
+  --amber-dim: rgba(245, 197, 66, 0.12);
+  --blue: #5ba8ff;
+  --cyan: #3de0d0;
+  --violet: #a78bfa;
+  --glow: 0 0 24px rgba(91, 168, 255, 0.12);
+  --radius: 14px;
+  --mono: "SF Mono", "JetBrains Mono", "Cascadia Code", "Consolas", ui-monospace, monospace;
+  color-scheme: dark;
+  font-size: 16px;
+}
+@media (min-width: 2560px) {
+  html.skin-tenzo, html[data-bot="0xTenzo"] { font-size: 17.5px; }
+}
+@media (min-width: 3200px) {
+  html.skin-tenzo, html[data-bot="0xTenzo"] { font-size: 19px; }
+}
+
+html.skin-tenzo body {
+  font-family: "SF Pro Display", "Segoe UI", "PingFang SC", "Noto Sans SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", system-ui, sans-serif;
+  background: var(--bg0);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+html.skin-tenzo .tenzo-bg,
+html.skin-tenzo .tenzo-grid,
+html.skin-tenzo .tenzo-scan {
+  display: block;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+html.skin-tenzo .tenzo-bg {
+  z-index: 0;
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(61, 224, 208, 0.08), transparent 55%),
+    radial-gradient(1100px 600px at 92% 0%, rgba(91, 168, 255, 0.10), transparent 50%),
+    radial-gradient(800px 500px at 50% 110%, rgba(167, 139, 250, 0.06), transparent 50%),
+    linear-gradient(180deg, var(--bg1), var(--bg0));
+}
+html.skin-tenzo .tenzo-grid {
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(120, 160, 220, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 160, 220, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 20%, transparent 75%);
+  animation: tenzo-grid 48s linear infinite;
+}
+html.skin-tenzo .tenzo-scan {
+  z-index: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.035) 2px,
+    rgba(0, 0, 0, 0.035) 4px
+  );
+  opacity: 0.55;
+}
+@keyframes tenzo-grid {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 48px 48px, 48px 48px; }
+}
+
+html.skin-tenzo header,
+html.skin-tenzo main { position: relative; z-index: 1; }
+html.skin-tenzo header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem 1rem;
+  width: auto;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 1.15rem 1.5rem .95rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+html.skin-tenzo main {
+  max-width: 1680px;
+  padding: 0 1.5rem 2.5rem;
+}
+@media (min-width: 2200px) {
+  html.skin-tenzo header,
+  html.skin-tenzo main { max-width: 2100px; }
+}
+@media (min-width: 3200px) {
+  html.skin-tenzo header,
+  html.skin-tenzo main { max-width: 2800px; }
+}
+
+html.skin-tenzo .back {
+  color: var(--blue);
+  background: rgba(91, 168, 255, 0.08);
+  border-color: var(--border);
+}
+html.skin-tenzo .back:hover { background: rgba(91, 168, 255, 0.18); border-color: var(--border-bright); }
+html.skin-tenzo .brand {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-width: 0;
+}
+html.skin-tenzo .tenzo-mark {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  flex: none;
+  background: linear-gradient(145deg, #1a3a4a, #0d1a28);
+  border: 1px solid var(--border-bright);
+  box-shadow: var(--glow), inset 0 0 20px rgba(61, 224, 208, 0.15);
+  position: relative;
+}
+html.skin-tenzo .tenzo-mark::after {
+  content: "";
+  width: .55rem;
+  height: .55rem;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+  animation: tenzo-pulse 2.2s ease-in-out infinite;
+}
+@keyframes tenzo-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: .75; }
+}
+html.skin-tenzo header h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  background: linear-gradient(90deg, #fff, #a8c8e8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+html.skin-tenzo .subline { display: block; min-width: 0; }
+html.skin-tenzo header .sub { color: var(--muted); font-size: .78rem; }
+html.skin-tenzo .badges { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+html.skin-tenzo #badge {
+  display: inline-flex;
+  align-items: center;
+  padding: .22rem .65rem;
+  border-radius: 999px;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(46, 229, 157, 0.35);
+  box-shadow: 0 0 16px rgba(46, 229, 157, 0.12);
+  font-size: .7rem;
+  font-weight: 650;
+}
+html.skin-tenzo #tenzo-status:not([hidden]) {
+  display: inline-flex;
+  align-items: center;
+  padding: .22rem .65rem;
+  border-radius: 999px;
+  background: rgba(91, 168, 255, 0.12);
+  color: var(--blue);
+  border: 1px solid rgba(91, 168, 255, 0.35);
+  font-size: .7rem;
+  font-weight: 650;
+}
+html.skin-tenzo #tenzo-status.fired {
+  background: var(--red-dim);
+  color: var(--red);
+  border-color: rgba(255, 93, 117, 0.35);
+}
+html.skin-tenzo .tenzo-live {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  background: rgba(46, 229, 157, 0.1);
+  border: 1px solid rgba(46, 229, 157, 0.28);
+  color: var(--green);
+  font-size: .68rem;
+  font-weight: 650;
+}
+html.skin-tenzo .tenzo-live.off {
+  background: rgba(130, 150, 173, 0.1);
+  border-color: rgba(130, 150, 173, 0.28);
+  color: var(--muted);
+}
+html.skin-tenzo .live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: tenzo-pulse 1.6s ease-in-out infinite;
+}
+html.skin-tenzo .tenzo-live.off .live-dot { animation: none; opacity: .5; }
+html.skin-tenzo header .meta {
+  margin-left: auto;
+  text-align: right;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+}
+html.skin-tenzo #tenzo-clock { display: block; color: var(--dim); margin-top: .15rem; }
+
+html.skin-tenzo .stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: .75rem;
+  margin: 1.15rem 0 1rem;
+}
+@media (max-width: 1200px) {
+  html.skin-tenzo .stats { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  html.skin-tenzo .stats { grid-template-columns: repeat(2, 1fr); }
+}
+html.skin-tenzo .stat {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .95rem 1.05rem .9rem;
+  box-shadow: var(--glow);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+html.skin-tenzo .stat::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110, 170, 255, 0.45), transparent);
+}
+html.skin-tenzo .stat:hover { border-color: var(--border-bright); }
+html.skin-tenzo .stat .k {
+  color: var(--muted);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: .4rem;
+}
+html.skin-tenzo .stat .v {
+  margin-top: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+html.skin-tenzo .stat .hint { color: var(--dim); font-size: .72rem; margin-top: .35rem; }
+html.skin-tenzo .stat.accent { border-color: rgba(61, 224, 208, 0.28); }
+html.skin-tenzo .up { color: var(--green); }
+html.skin-tenzo .down { color: var(--red); }
+html.skin-tenzo .flat { color: var(--muted); }
+html.skin-tenzo .warn { color: var(--amber); }
+html.skin-tenzo .tick-flash { animation: tenzo-flash .45s ease; }
+@keyframes tenzo-flash {
+  0% { text-shadow: 0 0 12px currentColor; }
+  100% { text-shadow: none; }
+}
+html.skin-tenzo .streak-meter { display: flex; gap: .3rem; margin-top: .45rem; }
+html.skin-tenzo .streak-meter span {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+html.skin-tenzo .streak-meter span.on {
+  background: linear-gradient(90deg, var(--amber), var(--red));
+  box-shadow: 0 0 8px rgba(255, 93, 117, 0.4);
+}
+
+html.skin-tenzo .tenzo-sizing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .6rem;
+  padding: .7rem 1rem;
+  margin: 0 0 1rem;
+  background: linear-gradient(105deg, rgba(20, 36, 56, 0.9), rgba(14, 22, 34, 0.85));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+html.skin-tenzo .tenzo-sizing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(61, 224, 208, 0.07), transparent);
+  animation: tenzo-shimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes tenzo-shimmer {
+  0%, 100% { transform: translateX(-30%); opacity: 0; }
+  50% { transform: translateX(30%); opacity: 1; }
+}
+html.skin-tenzo .strip-tag {
+  position: relative;
+  z-index: 1;
+  color: var(--cyan);
+  font-weight: 700;
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html.skin-tenzo .chips-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+html.skin-tenzo .tchip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .28rem .65rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+html.skin-tenzo .tchip.accent {
+  border-color: rgba(61, 224, 208, 0.4);
+  color: var(--cyan);
+  box-shadow: 0 0 14px rgba(61, 224, 208, 0.12);
+}
+html.skin-tenzo .tchip.hot { border-color: rgba(91, 168, 255, 0.45); color: var(--blue); }
+
+html.skin-tenzo #context.tenzo-split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+@media (max-width: 960px) {
+  html.skin-tenzo #context.tenzo-split { grid-template-columns: 1fr; }
+}
+html.skin-tenzo .glass-card {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.05rem 1.15rem;
+  box-shadow: var(--glow);
+  backdrop-filter: blur(10px);
+}
+html.skin-tenzo .glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110, 170, 255, 0.4), transparent);
+}
+html.skin-tenzo .glass-card h2 {
+  margin: 0 0 .85rem;
+  font-size: .88rem;
+  font-weight: 650;
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+}
+html.skin-tenzo .glass-card h2 .en { color: var(--dim); font-weight: 500; font-size: .72rem; }
+html.skin-tenzo .trader-head { display: flex; align-items: center; gap: .85rem; }
+html.skin-tenzo .avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-weight: 700;
+  color: var(--cyan);
+  background: linear-gradient(145deg, #1e3a4a, #0f1c2a);
+  border: 1px solid var(--border-bright);
+  box-shadow: inset 0 0 20px rgba(61, 224, 208, 0.12);
+}
+html.skin-tenzo .trader-handle { font-size: 1.2rem; font-weight: 700; }
+html.skin-tenzo .trader-handle a { color: var(--blue); text-decoration: none; }
+html.skin-tenzo .trader-handle a:hover { color: var(--cyan); }
+html.skin-tenzo .role { color: var(--muted); font-size: .72rem; margin-top: .15rem; }
+html.skin-tenzo .tchips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .7rem; }
+html.skin-tenzo .tnote {
+  margin-top: .65rem;
+  color: var(--muted);
+  font-size: .75rem;
+  line-height: 1.5;
+  padding: .55rem .7rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(80, 120, 180, 0.12);
+}
+html.skin-tenzo .tenzo-rules { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
+html.skin-tenzo .tenzo-rules li {
+  position: relative;
+  padding: .45rem .65rem .45rem 1.6rem;
+  font-size: .76rem;
+  line-height: 1.5;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  border: 1px solid rgba(80, 120, 180, 0.1);
+}
+html.skin-tenzo .tenzo-rules li::before {
+  content: "";
+  position: absolute;
+  left: .65rem;
+  top: .75rem;
+  width: .4rem;
+  height: .4rem;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(61, 224, 208, 0.5);
+}
+
+html.skin-tenzo main > section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.05rem 1.15rem;
+  box-shadow: var(--glow);
+  margin-top: 0 !important;
+  margin-bottom: 1rem;
+}
+html.skin-tenzo section h2 { font-size: .88rem; }
+html.skin-tenzo .table-wrap {
+  border-radius: 10px;
+  border-color: var(--border);
+  background: transparent;
+  max-height: 32rem;
+}
+html.skin-tenzo th {
+  color: var(--dim);
+  font-size: .68rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  background: rgba(8, 12, 20, 0.96);
+}
+html.skin-tenzo th, html.skin-tenzo td { border-bottom-color: rgba(80, 120, 180, 0.12); }
+html.skin-tenzo tbody tr:hover { background: rgba(91, 168, 255, 0.05); }
+html.skin-tenzo .tag-rules_set,
+html.skin-tenzo .tag-system_init,
+html.skin-tenzo .tag-source_watch_enabled {
+  background: rgba(61, 224, 208, 0.1);
+  color: var(--cyan);
+}
+html.skin-tenzo .filters button.on {
+  color: var(--text);
+  border-color: rgba(91, 168, 255, 0.55);
+  background: rgba(91, 168, 255, 0.16);
+  box-shadow: 0 0 12px rgba(91, 168, 255, 0.12);
+}
+html.skin-tenzo footer {
+  color: var(--dim);
+  border-top: 1px solid var(--border);
+  padding-top: .85rem;
+  margin-top: .35rem;
+}
+html.skin-tenzo footer a { color: var(--blue); text-decoration: none; }
+html.skin-tenzo footer a:hover { text-decoration: underline; }
+
+@media (max-width: 720px) {
+  html.skin-tenzo header .meta { margin-left: 0; width: 100%; text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.skin-tenzo .tenzo-grid,
+  html.skin-tenzo .tenzo-mark::after,
+  html.skin-tenzo .live-dot,
+  html.skin-tenzo .tenzo-sizing::before,
+  html.skin-tenzo .tick-flash {
+    animation: none !important;
+  }
+}
