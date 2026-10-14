@@ -56,7 +56,19 @@
     box-shadow: 0 8px 28px rgba(0,0,0,.35);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
   }
+  .card:hover { border-color: #3a516c; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: .6rem; }
+  .detail-link {
+    flex: none;
+    color: var(--blue); text-decoration: none; font-size: .72rem; font-weight: 700;
+    border: 1px solid var(--border); border-radius: 999px; padding: .18rem .55rem;
+    background: rgba(91,157,255,.08);
+  }
+  .detail-link:hover { background: rgba(91,157,255,.18); }
+  .bot-link { color: var(--text); text-decoration: none; }
+  .bot-link:hover { color: var(--blue); }
   .card::before {
     content: "";
     position: absolute; inset: 0 auto 0 0; width: 3px;
@@ -124,7 +136,7 @@
 <main>
   <div class="cards" id="cards"></div>
   <section>
-    <h2>最近事件 <span class="sub" style="font-weight:400;color:var(--muted)">open / close / skip / hire / fire</span></h2>
+    <h2>最近事件 <span class="sub" style="font-weight:400;color:var(--muted)">open / close / skip / hire / fire · 完整流水在各盘详情</span></h2>
     <div class="table-wrap">
       <table>
         <thead>
@@ -132,7 +144,7 @@
             <th>时间</th>
             <th>盘</th>
             <th>类型</th>
-            <th>详情</th>
+            <th>说明</th>
             <th>PnL</th>
           </tr>
         </thead>
@@ -185,8 +197,12 @@ function render(data) {
     } else {
       traderHtml = `<div class="trader">策略台 · 无跟单对象</div>`;
     }
-    return `<article class="card" data-id="${esc(b.id)}">
-      <div class="name">${esc(b.name)}</div>
+    const detailHref = "./bot.html?id=" + encodeURIComponent(b.id);
+    return `<article class="card" data-id="${esc(b.id)}" data-href="${detailHref}" tabindex="0">
+      <div class="card-top">
+        <div class="name">${esc(b.name)}</div>
+        <a class="detail-link" href="${detailHref}">详情</a>
+      </div>
       <div class="strategy">${esc(b.strategy)}</div>
       <div class="equity">${money(b.equity)}</div>
       <div class="pnl ${pnlClass(pnl)}">${pct(pnlP)} · 已实现 ${money(b.realized_pnl)}</div>
@@ -216,7 +232,7 @@ function render(data) {
       const detail = e.msg || (e.handle ? "@" + e.handle : "") || (e.symbol || "") || "—";
       return `<tr>
         <td style="white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)">${esc((e.ts||"").replace("T"," ").slice(0,19))}</td>
-        <td>${esc(e.bot_name || e.bot_id || "")}</td>
+        <td><a class="bot-link" href="./bot.html?id=${encodeURIComponent(e.bot_id || "")}">${esc(e.bot_name || e.bot_id || "")}</a></td>
         <td><span class="${tagClass(e.type)}">${esc(e.type)}</span></td>
         <td>${esc(detail)}</td>
         <td>${pnlCell}</td>
@@ -238,6 +254,18 @@ async function load() {
   }
   document.getElementById("cards").innerHTML = `<div class="err">无法加载数据：${esc(lastErr && lastErr.message)}</div>`;
 }
+
+function openCard(card) {
+  if (card && card.dataset.href) location.href = card.dataset.href;
+}
+document.getElementById("cards").addEventListener("click", (ev) => {
+  if (ev.target.closest("a")) return;
+  openCard(ev.target.closest(".card"));
+});
+document.getElementById("cards").addEventListener("keydown", (ev) => {
+  if (ev.key !== "Enter" || ev.target.closest("a")) return;
+  openCard(ev.target.closest(".card"));
+});
 
 load();
 if (LIVE) setInterval(load, 30000);

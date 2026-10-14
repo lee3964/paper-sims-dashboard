@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>模拟盘详情 · Paper</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121820;
+    --panel2: #18212c;
+    --border: #243041;
+    --text: #e7eef7;
+    --muted: #8b9bb0;
+    --green: #3dd68c;
+    --red: #ff6b7a;
+    --amber: #f5c542;
+    --blue: #5b9dff;
+    --purple: #b388ff;
+    --cyan: #4fd1c5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #152033 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1rem;
+    padding: 1rem 1.25rem .75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .back {
+    color: var(--blue); text-decoration: none; font-size: .85rem; font-weight: 650;
+    border: 1px solid var(--border); border-radius: 999px; padding: .28rem .7rem;
+    background: rgba(91,157,255,.08);
+  }
+  .back:hover { background: rgba(91,157,255,.18); }
+  header h1 { margin: 0; font-size: 1.2rem; font-weight: 650; }
+  header .sub { color: var(--muted); font-size: .8rem; flex: 1 1 12rem; }
+  header .meta { color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; }
+  .badge {
+    display: inline-block; padding: .15rem .5rem; border-radius: 999px;
+    background: #1a2a1f; color: var(--green); font-size: .7rem; font-weight: 600;
+    border: 1px solid #2a4a35;
+  }
+  main { padding: 1rem 1.25rem 2.5rem; max-width: 1180px; margin: 0 auto; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: .7rem;
+    margin: .9rem 0 1rem;
+  }
+  @media (max-width: 960px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    background: linear-gradient(165deg, var(--panel2), var(--panel));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .7rem .8rem .75rem;
+  }
+  .stat .k { color: var(--muted); font-size: .72rem; }
+  .stat .v { margin-top: .25rem; font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .v.lg { font-size: 1.25rem; }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .flat { color: var(--muted); }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: .9rem 1rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .trader { font-size: .85rem; line-height: 1.45; }
+  .trader a { color: var(--blue); text-decoration: none; }
+  .sizing { color: var(--muted); font-size: .78rem; margin-top: .45rem; line-height: 1.45; }
+  .note {
+    color: var(--muted); font-size: .75rem; margin: .35rem 0 .8rem; line-height: 1.45;
+  }
+  section h2 {
+    font-size: .95rem; margin: 0 0 .65rem; font-weight: 650;
+    display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .7rem;
+  }
+  .filters { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 .7rem; }
+  .filters button, .check {
+    background: var(--panel2); color: var(--muted); border: 1px solid var(--border);
+    border-radius: 999px; padding: .28rem .65rem; font-size: .75rem; cursor: pointer;
+  }
+  .filters button.on { color: var(--text); border-color: #3d5678; background: #1c2c42; }
+  .check { display: inline-flex; align-items: center; gap: .35rem; }
+  .table-wrap {
+    overflow: auto; border: 1px solid var(--border); border-radius: 12px;
+    background: var(--panel);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+  th, td { padding: .5rem .65rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 550; background: var(--panel2); position: sticky; top: 0; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tag {
+    display: inline-block; padding: .1rem .4rem; border-radius: 5px;
+    font-size: .68rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+  }
+  .tag-open { background: #1a2f45; color: var(--blue); }
+  .tag-close { background: #2a2230; color: var(--purple); }
+  .tag-skip { background: #2a2a1a; color: var(--amber); }
+  .tag-hire { background: #1a2a1f; color: var(--green); }
+  .tag-fire { background: #2a1a1e; color: var(--red); }
+  .tag-rules_update { background: #1e2430; color: var(--cyan); }
+  .arch {
+    display: inline-block; margin-left: .35rem; color: var(--amber); font-size: .65rem; font-weight: 650;
+  }
+  .empty { color: var(--muted); padding: .8rem .2rem; font-size: .82rem; }
+  .err { color: var(--red); padding: 1rem; }
+  .picker a { color: var(--blue); margin-right: .8rem; }
+  footer { color: var(--muted); font-size: .72rem; margin-top: 1.2rem; }
+  @media (max-width: 720px) {
+    .wide thead { display: none; }
+    .wide tr { display: block; padding: .65rem .75rem; border-bottom: 1px solid var(--border); }
+    .wide td {
+      display: flex; justify-content: space-between; gap: 1rem;
+      border: none; padding: .18rem 0; text-align: right;
+    }
+    .wide td::before { content: attr(data-label); color: var(--muted); text-align: left; }
+    .wide td.num { text-align: right; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="./">← 返回对比</a>
+  <h1 id="title">模拟盘</h1>
+  <span class="badge">纸面 · PAPER ONLY</span>
+  <span class="sub" id="strategy"></span>
+  <div class="meta" id="meta">加载中…</div>
+</header>
+<main id="main">
+  <div class="stats" id="stats"></div>
+  <div class="panel" id="context"></div>
+  <section>
+    <h2>当前持仓</h2>
+    <div class="table-wrap">
+      <table class="wide" id="pos-table">
+        <thead>
+          <tr>
+            <th>标的</th>
+            <th>分组</th>
+            <th class="num">数量</th>
+            <th class="num">开仓价</th>
+            <th class="num">名义</th>
+            <th class="num">标记价</th>
+            <th class="num">未实现</th>
+            <th>开仓时间</th>
+          </tr>
+        </thead>
+        <tbody id="positions"></tbody>
+      </table>
+    </div>
+  </section>
+  <section style="margin-top:1.2rem">
+    <h2>交易流水 <span id="ev-count" class="sub" style="font-weight:400;color:var(--muted)"></span></h2>
+    <p class="note" id="hist-note" hidden>账本数字是当前纸面结存。流水里标「重置前」的记录来自重置时归档的 jsonl，不回写到当前权益。纸面模拟，没有实盘委托。</p>
+    <div class="filters" id="filters"></div>
+    <div class="table-wrap">
+      <table class="wide">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>类型</th>
+            <th>标的</th>
+            <th>分组</th>
+            <th class="num">数量</th>
+            <th class="num">价格</th>
+            <th class="num">名义</th>
+            <th class="num">盈亏</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody id="events"></tbody>
+      </table>
+    </div>
+  </section>
+  <footer id="footer">纸面模拟 · 非实盘</footer>
+</main>
+<script>
+const KNOWN = ["0xboan", "0xTenzo", "savipww"];
+const id = new URLSearchParams(location.search).get("id") || "";
+const LIVE = location.port === "8765" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
+const URLS = id
+  ? (LIVE
+      ? ["/api/bots/" + encodeURIComponent(id) + ".json", "./data/bots/" + encodeURIComponent(id) + ".json"]
+      : ["./data/bots/" + encodeURIComponent(id) + ".json"])
+  : [];
+
+const FILTERS = [
+  ["all", "全部"],
+  ["open", "开仓"],
+  ["close", "平仓"],
+  ["skip", "跳过"],
+  ["hire", "雇佣"],
+  ["fire", "解雇"],
+  ["rules_update", "规则"],
+];
+let state = { events: [], filter: "all", showArchived: true };
+
+function money(n) {
+  if (n == null || n === "" || Number.isNaN(Number(n))) return "—";
+  const x = Number(n);
+  const s = Math.abs(x) >= 1000
+    ? x.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : x.toFixed(2);
+  return "$" + s;
+}
+function qtyFmt(n) {
+  if (n == null || n === "" || Number.isNaN(Number(n))) return "—";
+  const x = Number(n);
+  if (Math.abs(x) >= 1000) return x.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  if (Math.abs(x) >= 1) return x.toLocaleString("en-US", { maximumFractionDigits: 4 });
+  return x.toPrecision(4);
+}
+function pxFmt(n) {
+  if (n == null || n === "" || Number.isNaN(Number(n))) return "—";
+  const x = Number(n);
+  if (Math.abs(x) >= 1) return "$" + x.toLocaleString("en-US", { maximumFractionDigits: 4 });
+  return "$" + x.toPrecision(4);
+}
+function pct(n) {
+  const sign = n > 0 ? "+" : "";
+  return sign + n.toFixed(2) + "%";
+}
+function pnlClass(n) {
+  if (n > 0.0001) return "up";
+  if (n < -0.0001) return "down";
+  return "flat";
+}
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function tagClass(t) {
+  return "tag tag-" + (t || "").replace(/[^a-z_]/gi, "");
+}
+function when(ts) {
+  return esc((ts || "").replace("T", " ").slice(0, 19));
+}
+function pnlCell(pnl, pnlPct) {
+  if (pnl == null || pnl === "") return "—";
+  const n = Number(pnl);
+  if (!Number.isFinite(n)) return "—";
+  const extra = pnlPct == null || pnlPct === "" ? "" : ` <span class="flat">(${pct(Number(pnlPct))})</span>`;
+  return `<span class="${pnlClass(n)}">${n >= 0 ? "+" : ""}${n.toFixed(4)}</span>${extra}`;
+}
+
+function renderStats(b) {
+  const pnl = b.equity - b.start_cash;
+  const pnlP = b.start_cash ? (pnl / b.start_cash) * 100 : 0;
+  const cells = [
+    ["权益", money(b.equity), "lg " + pnlClass(pnl)],
+    ["现金", money(b.cash), ""],
+    ["起始", money(b.start_cash), ""],
+    ["已实现盈亏", money(b.realized_pnl), pnlClass(b.realized_pnl)],
+    ["胜 / 负", `${b.win_count} / ${b.loss_count}`, ""],
+    ["持仓", String(b.open_positions_count ?? (b.open_positions || []).length), ""],
+  ];
+  document.getElementById("stats").innerHTML = cells.map(([k, v, cls]) =>
+    `<div class="stat"><div class="k">${k}</div><div class="v ${cls}">${v}</div></div>`
+  ).join("");
+}
+
+function renderContext(b) {
+  let who;
+  if (b.current_trader) {
+    who = `当前跟单 <a href="https://x.com/${esc(b.current_trader)}" target="_blank" rel="noopener">@${esc(b.current_trader)}</a> · 连亏 <b>${b.consecutive_losses ?? 0}</b>`;
+  } else if (b.seats && b.seats.length) {
+    who = `席位 ${esc(b.seats.join(" · "))}`;
+  } else {
+    who = "策略台 · 无跟单对象";
+  }
+  const trades = `成交 ${b.trade_count ?? 0}`;
+  document.getElementById("context").innerHTML =
+    `<div class="trader">${who} · ${trades}</div><div class="sizing">${esc(b.sizing_note || "")}</div>`;
+}
+
+function renderPositions(rows) {
+  const body = document.getElementById("positions");
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="8" class="empty">暂无持仓</td></tr>`;
+    return;
+  }
+  body.innerHTML = rows.map(p => {
+    const upnl = p.unrealized_pnl;
+    let upnlCell = "—";
+    if (upnl != null && upnl !== "") {
+      const n = Number(upnl);
+      upnlCell = `<span class="${pnlClass(n)}">${n >= 0 ? "+" : ""}${money(n)}</span>`;
+    }
+    return `<tr>
+      <td data-label="标的">${esc(p.symbol || "—")}</td>
+      <td data-label="分组">${esc(p.sleeve || "—")}</td>
+      <td class="num" data-label="数量">${qtyFmt(p.qty)}</td>
+      <td class="num" data-label="开仓价">${pxFmt(p.entry_price)}</td>
+      <td class="num" data-label="名义">${money(p.notional_usd)}</td>
+      <td class="num" data-label="标记价">${pxFmt(p.mark_price)}</td>
+      <td class="num" data-label="未实现">${upnlCell}</td>
+      <td data-label="开仓时间">${when(p.opened_at)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function visibleEvents() {
+  return state.events.filter(e => {
+    if (!state.showArchived && e.archived) return false;
+    if (state.filter !== "all" && e.type !== state.filter) return false;
+    return true;
+  });
+}
+
+function renderEvents() {
+  const rows = visibleEvents();
+  const body = document.getElementById("events");
+  const archivedN = state.events.filter(e => e.archived).length;
+  document.getElementById("ev-count").textContent =
+    `共 ${state.events.length} 条` + (archivedN ? ` · 重置前 ${archivedN}` : "") + ` · 显示 ${rows.length}`;
+  document.getElementById("hist-note").hidden = archivedN === 0;
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="9" class="empty">暂无事件</td></tr>`;
+    return;
+  }
+  body.innerHTML = rows.slice().reverse().map(e => {
+    const arch = e.archived ? `<span class="arch">重置前</span>` : "";
+    const who = e.symbol || (e.handle ? "@" + e.handle : "—");
+    const fee = e.fee_usd != null && e.fee_usd !== "" ? ` · 费 ${money(e.fee_usd)}` : "";
+    return `<tr>
+      <td data-label="时间" style="white-space:nowrap;color:var(--muted)">${when(e.ts)}</td>
+      <td data-label="类型"><span class="${tagClass(e.type)}">${esc(e.type)}</span>${arch}</td>
+      <td data-label="标的">${esc(who)}</td>
+      <td data-label="分组">${esc(e.sleeve || "—")}</td>
+      <td class="num" data-label="数量">${qtyFmt(e.qty)}</td>
+      <td class="num" data-label="价格">${pxFmt(e.price)}</td>
+      <td class="num" data-label="名义">${money(e.notional_usd)}</td>
+      <td class="num" data-label="盈亏">${pnlCell(e.pnl, e.pnl_pct)}</td>
+      <td data-label="说明">${esc(e.msg || "—")}${esc(fee)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function renderFilters() {
+  const box = document.getElementById("filters");
+  const archivedN = state.events.filter(e => e.archived).length;
+  box.innerHTML = FILTERS.map(([k, label]) =>
+    `<button type="button" data-filter="${k}" class="${state.filter === k ? "on" : ""}">${label}</button>`
+  ).join("") + (archivedN
+    ? `<label class="check"><input type="checkbox" id="arch" ${state.showArchived ? "checked" : ""}/> 显示重置前</label>`
+    : "");
+  box.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.filter = btn.dataset.filter;
+      renderFilters();
+      renderEvents();
+    });
+  });
+  const arch = box.querySelector("#arch");
+  if (arch) {
+    arch.addEventListener("change", (ev) => {
+      state.showArchived = ev.target.checked;
+      renderEvents();
+    });
+  }
+}
+
+function render(data) {
+  const b = data.bot || {};
+  document.title = (b.name || id) + " · 模拟盘详情";
+  document.getElementById("title").textContent = b.name || id;
+  document.getElementById("strategy").textContent = b.strategy || "";
+  document.getElementById("meta").textContent = "更新 " + (data.generated_at || b.updated_at || "—") + " · " + (data.timezone || "SGT");
+  renderStats(b);
+  renderContext(b);
+  renderPositions(b.open_positions || []);
+  state.events = b.events || b.recent_events || [];
+  renderFilters();
+  renderEvents();
+  document.getElementById("footer").textContent =
+    "纸面模拟 · 非实盘 · " + (b.source_path || "") + (data.note ? " · " + data.note : "");
+}
+
+function showMissing() {
+  document.getElementById("title").textContent = "未找到模拟盘";
+  document.getElementById("meta").textContent = "纸面 · PAPER ONLY";
+  const links = KNOWN.map(k => `<a href="./bot.html?id=${encodeURIComponent(k)}">${esc(k)}</a>`).join("");
+  document.getElementById("main").innerHTML =
+    `<div class="panel"><div class="err">未找到该模拟盘${id ? "：" + esc(id) : ""}。</div><p class="picker">${links}</p></div>`;
+}
+
+async function load() {
+  if (!id || URLS.length === 0) {
+    showMissing();
+    return;
+  }
+  let lastErr;
+  let missing = true;
+  for (const u of URLS) {
+    try {
+      const r = await fetch(u + (u.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+      if (r.status === 404) {
+        lastErr = new Error("404");
+        continue;
+      }
+      if (!r.ok) throw new Error(u + " " + r.status);
+      const data = await r.json();
+      if (!data.bot) {
+        lastErr = new Error("empty");
+        continue;
+      }
+      missing = false;
+      render(data);
+      return;
+    } catch (e) {
+      missing = false;
+      lastErr = e;
+    }
+  }
+  if (missing) showMissing();
+  else document.getElementById("main").innerHTML =
+    `<div class="err">无法加载 ${esc(id)}：${esc(lastErr && lastErr.message)}</div>`;
+}
+load();
+</script>
+</body>
+</html>

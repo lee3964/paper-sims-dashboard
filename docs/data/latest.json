@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T07:36:21+08:00",
+  "generated_at": "2026-10-14T08:36:18+08:00",
   "timezone": "Asia/Singapore",
   "bots": [
     {
@@ -26,7 +26,15 @@
           "handle": "healthysmilee",
           "symbol": null,
           "pnl": null,
-          "msg": "雇佣交易员 @healthysmilee"
+          "pnl_pct": null,
+          "qty": null,
+          "price": null,
+          "notional_usd": null,
+          "fee_usd": null,
+          "sleeve": null,
+          "side": null,
+          "msg": "雇佣交易员 @healthysmilee",
+          "archived": false
         },
         {
           "ts": "2026-10-14T07:17:20+08:00",
@@ -35,10 +43,19 @@
           "handle": null,
           "symbol": null,
           "pnl": null,
-          "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）"
+          "pnl_pct": null,
+          "qty": null,
+          "price": null,
+          "notional_usd": null,
+          "fee_usd": null,
+          "sleeve": null,
+          "side": null,
+          "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）",
+          "archived": false
         }
       ],
-      "source_path": "/workspace/fomo-sim-0xboan"
+      "source_path": "/workspace/fomo-sim-0xboan",
+      "open_positions": []
     },
     {
       "id": "0xTenzo",
@@ -64,7 +81,15 @@
           "handle": "jamjam0407",
           "symbol": null,
           "pnl": null,
-          "msg": "雇佣交易员 @jamjam0407"
+          "pnl_pct": null,
+          "qty": null,
+          "price": null,
+          "notional_usd": null,
+          "fee_usd": null,
+          "sleeve": null,
+          "side": null,
+          "msg": "雇佣交易员 @jamjam0407",
+          "archived": false
         },
         {
           "ts": "2026-10-14T07:18:46+08:00",
@@ -73,10 +98,19 @@
           "handle": null,
           "symbol": null,
           "pnl": null,
-          "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%"
+          "pnl_pct": null,
+          "qty": null,
+          "price": null,
+          "notional_usd": null,
+          "fee_usd": null,
+          "sleeve": null,
+          "side": null,
+          "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%",
+          "archived": false
         }
       ],
-      "source_path": "/workspace/fomo-sim"
+      "source_path": "/workspace/fomo-sim",
+      "open_positions": []
     },
     {
       "id": "savipww",
@@ -90,21 +124,11 @@
       "win_count": 0,
       "loss_count": 0,
       "open_positions_count": 0,
+      "open_positions": [],
       "current_trader": null,
       "consecutive_losses": null,
       "sizing_note": "Kelly×自由现金，meme 封顶约 6% · QUANT 拨盘",
       "updated_at": "2026-10-14T07:35:13+08:00",
-      "recent_events": [
-        {
-          "ts": "2026-10-14T07:35:15+08:00",
-          "type": "skip",
-          "bot_id": "savipww",
-          "handle": null,
-          "symbol": null,
-          "pnl": null,
-          "msg": "judge_no_pick"
-        }
-      ],
       "source_path": "/workspace/paper-trading/data",
       "seats": [
         "CHIEF",
@@ -115,10 +139,64 @@
         "SIZE",
         "FILL",
         "RISK"
+      ],
+      "recent_events": [
+        {
+          "ts": "2026-10-14T07:35:15+08:00",
+          "type": "skip",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "pnl_pct": null,
+          "qty": null,
+          "price": null,
+          "notional_usd": null,
+          "fee_usd": null,
+          "sleeve": "meme",
+          "side": null,
+          "msg": "judge_no_pick",
+          "archived": false
+        },
+        {
+          "ts": "2026-10-14T07:36:06+08:00",
+          "type": "rules_update",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "pnl_pct": null,
+          "qty": null,
+          "price": null,
+          "notional_usd": null,
+          "fee_usd": null,
+          "sleeve": "meme",
+          "side": null,
+          "msg": "群对齐：meme 起始本金改为 $1000",
+          "archived": false
+        }
       ]
     }
   ],
   "recent_events": [
+    {
+      "ts": "2026-10-14T07:36:06+08:00",
+      "type": "rules_update",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "pnl_pct": null,
+      "qty": null,
+      "price": null,
+      "notional_usd": null,
+      "fee_usd": null,
+      "sleeve": "meme",
+      "side": null,
+      "msg": "群对齐：meme 起始本金改为 $1000",
+      "archived": false,
+      "bot_name": "模拟盘savipww"
+    },
     {
       "ts": "2026-10-14T07:35:15+08:00",
       "type": "skip",
@@ -126,7 +204,15 @@
       "handle": null,
       "symbol": null,
       "pnl": null,
+      "pnl_pct": null,
+      "qty": null,
+      "price": null,
+      "notional_usd": null,
+      "fee_usd": null,
+      "sleeve": "meme",
+      "side": null,
       "msg": "judge_no_pick",
+      "archived": false,
       "bot_name": "模拟盘savipww"
     },
     {
@@ -136,7 +222,15 @@
       "handle": null,
       "symbol": null,
       "pnl": null,
+      "pnl_pct": null,
+      "qty": null,
+      "price": null,
+      "notional_usd": null,
+      "fee_usd": null,
+      "sleeve": null,
+      "side": null,
       "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%",
+      "archived": false,
       "bot_name": "模拟盘0xTenzo"
     },
     {
@@ -146,7 +240,15 @@
       "handle": null,
       "symbol": null,
       "pnl": null,
+      "pnl_pct": null,
+      "qty": null,
+      "price": null,
+      "notional_usd": null,
+      "fee_usd": null,
+      "sleeve": null,
+      "side": null,
       "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）",
+      "archived": false,
       "bot_name": "模拟盘0xboan"
     },
     {
@@ -156,7 +258,15 @@
       "handle": "healthysmilee",
       "symbol": null,
       "pnl": null,
+      "pnl_pct": null,
+      "qty": null,
+      "price": null,
+      "notional_usd": null,
+      "fee_usd": null,
+      "sleeve": null,
+      "side": null,
       "msg": "雇佣交易员 @healthysmilee",
+      "archived": false,
       "bot_name": "模拟盘0xboan"
     },
     {
@@ -166,7 +276,15 @@
       "handle": "jamjam0407",
       "symbol": null,
       "pnl": null,
+      "pnl_pct": null,
+      "qty": null,
+      "price": null,
+      "notional_usd": null,
+      "fee_usd": null,
+      "sleeve": null,
+      "side": null,
       "msg": "雇佣交易员 @jamjam0407",
+      "archived": false,
       "bot_name": "模拟盘0xTenzo"
     }
   ],
