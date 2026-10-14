@@ -76,7 +76,42 @@
   }
   .card[data-id="0xboan"] { --accent: var(--cyan); }
   .card[data-id="0xTenzo"] { --accent: var(--blue); }
-  .card[data-id="savipww"] { --accent: var(--purple); }
+  .card[data-id="savipww"] {
+    --accent: var(--purple);
+    background:
+      radial-gradient(420px 180px at 100% 0%, rgba(179, 136, 255, .18), transparent 62%),
+      linear-gradient(165deg, var(--panel2), var(--panel));
+    box-shadow: 0 8px 28px rgba(0,0,0,.35), 0 0 32px rgba(179, 136, 255, .14);
+  }
+  .card[data-id="savipww"] .detail-link {
+    color: var(--purple);
+    background: rgba(179, 136, 255, .1);
+    border-color: rgba(179, 136, 255, .4);
+  }
+  .seat-strip {
+    display: flex; flex-wrap: wrap; gap: .32rem;
+    margin-top: .75rem;
+  }
+  .mini-seat {
+    display: inline-flex; align-items: center; gap: .28rem;
+    border: 1px solid rgba(179, 136, 255, .35);
+    border-radius: 999px;
+    padding: .1rem .42rem .1rem .32rem;
+    background: rgba(179, 136, 255, .06);
+    line-height: 1.2;
+  }
+  .mini-seat i {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--purple);
+    box-shadow: 0 0 6px var(--purple);
+    flex: none;
+  }
+  .mini-seat b { font-size: .68rem; font-weight: 700; color: var(--text); }
+  .mini-seat em {
+    font-style: normal;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: .58rem; letter-spacing: .04em; color: var(--muted);
+  }
   .card .name { font-size: 1rem; font-weight: 650; margin: 0 0 .2rem; }
   .card .strategy { color: var(--muted); font-size: .75rem; line-height: 1.35; min-height: 2.1em; }
   .equity {
@@ -180,6 +215,10 @@ function esc(s) {
 function tagClass(t) {
   return "tag tag-" + (t || "").replace(/[^a-z_]/gi, "");
 }
+const SEAT_ZH = {
+  CHIEF: "主控", QUANT: "量化", SCAN: "扫描", JUDGE: "裁决",
+  STOCKS: "股票", SIZE: "仓位", FILL: "成交", RISK: "风控",
+};
 
 function render(data) {
   const meta = document.getElementById("meta");
@@ -192,16 +231,20 @@ function render(data) {
     if (b.current_trader) {
       traderHtml = `<div class="trader">当前跟单 <a href="https://x.com/${esc(b.current_trader)}" target="_blank" rel="noopener">@${esc(b.current_trader)}</a>
         · 连亏 <b>${b.consecutive_losses ?? 0}</b></div>`;
-    } else if (b.seats) {
-      traderHtml = `<div class="trader">席位 ${esc((b.seats || []).join(" · "))}</div>`;
+    } else if (b.seats && b.seats.length) {
+      traderHtml = `<div class="seat-strip" aria-label="八席">${b.seats.map(s => {
+        const zh = SEAT_ZH[s] || s;
+        return `<span class="mini-seat" title="${esc(s)}"><i></i><b>${esc(zh)}</b><em>${esc(s)}</em></span>`;
+      }).join("")}</div>`;
     } else {
       traderHtml = `<div class="trader">策略台 · 无跟单对象</div>`;
     }
     const detailHref = "./bot.html?id=" + encodeURIComponent(b.id);
+    const linkLabel = b.id === "savipww" ? "八席终端" : "详情";
     return `<article class="card" data-id="${esc(b.id)}" data-href="${detailHref}" tabindex="0">
       <div class="card-top">
         <div class="name">${esc(b.name)}</div>
-        <a class="detail-link" href="${detailHref}">详情</a>
+        <a class="detail-link" href="${detailHref}">${linkLabel}</a>
       </div>
       <div class="strategy">${esc(b.strategy)}</div>
       <div class="equity">${money(b.equity)}</div>

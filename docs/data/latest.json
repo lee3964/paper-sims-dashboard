@@ -128,6 +128,9 @@
       "current_trader": null,
       "consecutive_losses": null,
       "sizing_note": "Kelly×自由现金，meme 封顶约 6% · QUANT 拨盘",
+      "kelly_cap_pct": 6.0,
+      "meme_dial": 6.0,
+      "meme_dial_source": "kelly_cap",
       "updated_at": "2026-10-14T07:35:13+08:00",
       "source_path": "/workspace/paper-trading/data",
       "seats": [

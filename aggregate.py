@@ -305,6 +305,10 @@ def _previous_bots() -> dict[str, dict[str, Any]]:
             if base:
                 base["events"] = bot.get("events") or base.get("events") or base.get("recent_events") or []
                 base["open_positions"] = bot.get("open_positions") or base.get("open_positions") or []
+                # Detail files may carry desk fields the compare snapshot lacks.
+                for key in ("meme_dial", "meme_dial_source", "kelly_cap_pct"):
+                    if base.get(key) is None and bot.get(key) is not None:
+                        base[key] = bot[key]
                 out[bot_id] = base
             else:
                 out[bot_id] = bot
@@ -440,6 +444,27 @@ def _parse_yaml_simple_start_cash(path: Path) -> float:
     return 100.0
 
 
+def _as_percent(value: float | None, *, unit_interval_is_fraction: bool) -> float | None:
+    """Kelly caps in config are already percent. A ledger dial may be 0.06 or 6."""
+    if value is None:
+        return None
+    if unit_interval_is_fraction and abs(value) <= 1:
+        return value * 100
+    return value
+
+
+def _savipww_dial(state: dict[str, Any], kelly: float) -> tuple[float, str]:
+    raw = state.get("meme_dial")
+    if raw is None and isinstance(state.get("quant"), dict):
+        raw = state["quant"].get("meme_dial")
+    if raw is None and isinstance(state.get("dials"), dict):
+        raw = state["dials"].get("meme")
+    dial = _as_percent(_num(raw), unit_interval_is_fraction=True)
+    if dial is None:
+        return round(float(kelly), 4), "kelly_cap"
+    return round(dial, 4), "ledger"
+
+
 def _savipww_data_dir(root: Path) -> Path:
     if (root / "ledger_state.json").exists() or (root / "events.jsonl").exists() or (root / "journal.jsonl").exists():
         return root
@@ -517,6 +542,8 @@ def aggregate_savipww(root: Path | None = None, *, include_archives: bool = True
                     pass
                 break
 
+    dial, dial_source = _savipww_dial(state, kelly)
+
     bot = {
         "id": "savipww",
         "name": "模拟盘savipww",
@@ -533,6 +560,9 @@ def aggregate_savipww(root: Path | None = None, *, include_archives: bool = True
         "current_trader": None,
         "consecutive_losses": None,
         "sizing_note": f"Kelly×自由现金，meme 封顶约 {kelly:g}% · QUANT 拨盘",
+        "kelly_cap_pct": kelly,
+        "meme_dial": dial,
+        "meme_dial_source": dial_source,
         "updated_at": state.get("saved_at") or _now_iso(),
         "source_path": str(data_dir),
         "seats": ["CHIEF", "QUANT", "SCAN", "JUDGE", "STOCKS", "SIZE", "FILL", "RISK"],

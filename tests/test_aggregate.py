@@ -172,6 +172,36 @@ class NormalizeTests(unittest.TestCase):
         # homepage list is the live book, not the archive
         self.assertTrue(all(not e["archived"] for e in bot["recent_events"]))
         self.assertGreater(len(bot["events"]), len(bot["recent_events"]))
+        self.assertEqual(bot["kelly_cap_pct"], 6.0)
+        self.assertEqual(bot["meme_dial"], 6.0)
+        self.assertEqual(bot["meme_dial_source"], "kelly_cap")
+
+    def test_savipww_meme_dial_prefers_ledger_fraction(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            data = root / "data"
+            data.mkdir()
+            (root / "config.yaml").write_text(
+                "meme:\n  starting_cash_usd: 1000\n  kelly_cap_pct_of_bank: 8\n",
+                encoding="utf-8",
+            )
+            (data / "ledger_state.json").write_text(
+                json.dumps(
+                    {
+                        "starting_cash": 1000,
+                        "cash": 1000,
+                        "positions": {},
+                        "closed": [],
+                        "saved_at": "2026-10-14T07:35:13+08:00",
+                        "quant": {"meme_dial": 0.04},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            bot = aggregate.aggregate_savipww(root, include_archives=False)
+        self.assertEqual(bot["kelly_cap_pct"], 8.0)
+        self.assertEqual(bot["meme_dial"], 4.0)
+        self.assertEqual(bot["meme_dial_source"], "ledger")
 
 
 if __name__ == "__main__":

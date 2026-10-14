@@ -118,8 +118,9 @@
   .picker a { color: var(--blue); margin-right: .8rem; }
   footer { color: var(--muted); font-size: .72rem; margin-top: 1.2rem; }
 
-  /* 0xboan only. Default bots never get html.skin-boan. */
+  /* Skins are opt-in by bot id. Default bots get neither class. */
   .boan-only { display: none; }
+  .savipww-only { display: none; }
   .brand, .subline, .badges { display: contents; }
 
   html.skin-boan {
@@ -516,10 +517,13 @@
 (function () {
   try {
     var params = new URLSearchParams(location.search);
-    if ((params.get("id") || "") === "0xboan") document.documentElement.classList.add("skin-boan");
+    var botId = params.get("id") || "";
+    if (botId === "0xboan") document.documentElement.classList.add("skin-boan");
+    else if (botId === "savipww") document.documentElement.classList.add("skin-savipww");
   } catch (e) {}
 })();
 </script>
+<link rel="stylesheet" href="./savipww-desk.css" />
 </head>
 <body>
 <canvas id="grid-canvas" class="boan-only" aria-hidden="true"></canvas>
@@ -528,6 +532,7 @@
   <a class="back" href="./">← 返回对比</a>
   <div class="brand">
     <div class="logo boan-only" aria-hidden="true">0x</div>
+    <div class="desk-kicker savipww-only">对冲基金终端 · HEDGE FUND TERMINAL</div>
     <h1 id="title">模拟盘</h1>
   </div>
   <div class="badges">
@@ -541,6 +546,66 @@
   <div class="meta" id="meta"><span class="spin boan-only" id="spin" aria-hidden="true"></span>加载中…</div>
 </header>
 <main id="main">
+  <section class="desk-hero hero savipww-only" aria-label="权益与拨盘">
+    <article class="glass equity-card">
+      <div class="kicker"><span class="idx">01</span> 权益 <span class="kicker-en">EQUITY</span></div>
+      <div class="equity-row">
+        <div class="equity-num mono" id="equity-num" aria-live="polite">—</div>
+        <span class="caret" aria-hidden="true"></span>
+      </div>
+      <div class="equity-pnl mono" id="equity-pnl"></div>
+      <div class="mix">
+        <div class="mix-top"><span>现金占比</span><span class="mono" id="cash-mix">—</span></div>
+        <div class="mix-track" aria-hidden="true"><span id="cash-bar"></span></div>
+      </div>
+      <p class="fine">纸面结存。数字只在账本刷新时变化，不会自己跳动。</p>
+    </article>
+    <article class="glass dial-card">
+      <div class="kicker"><span class="idx">02</span> 量化拨盘 <span class="kicker-en">QUANT · MEME</span></div>
+      <div class="dial-wrap">
+        <svg class="dial-svg" viewBox="0 0 240 240" role="img" aria-label="QUANT meme 拨盘">
+          <defs>
+            <linearGradient id="dialGrad" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="#6d28d9"/>
+              <stop offset="55%" stop-color="#c084fc"/>
+              <stop offset="100%" stop-color="#f5e9ff"/>
+            </linearGradient>
+            <filter id="dialGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path id="dial-track" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12" stroke-linecap="round"/>
+          <path id="dial-glow" fill="none" stroke="rgba(192,132,252,0.45)" stroke-width="16" stroke-linecap="round" filter="url(#dialGlow)"/>
+          <path id="dial-value" fill="none" stroke="url(#dialGrad)" stroke-width="12" stroke-linecap="round"/>
+          <g id="dial-ticks"></g>
+          <g id="dial-needle">
+            <line x1="120" y1="120" x2="120" y2="44" stroke="#f8f4ff" stroke-width="2.2" stroke-linecap="round"/>
+          </g>
+          <circle cx="120" cy="120" r="6.5" fill="#140c22" stroke="#efe6ff" stroke-width="2"/>
+        </svg>
+        <div class="dial-read">
+          <div class="dial-val mono" id="dial-val">—</div>
+          <div class="dial-unit">MEME</div>
+        </div>
+      </div>
+      <div class="dial-cap" id="dial-cap">meme 拨盘</div>
+      <div class="dial-scale mono" id="dial-scale"></div>
+      <div class="dial-src" id="dial-src"></div>
+    </article>
+    <article class="glass book-card">
+      <div class="kicker">账本 <span class="kicker-en">BOOK</span></div>
+      <dl class="book" id="book"></dl>
+    </article>
+  </section>
+  <div class="glass sizing savipww-only"><span>仓位规则</span><p id="sizing-copy"></p></div>
+  <section class="seat-panel savipww-only" aria-label="八席">
+    <div class="panel-h">
+      <h2><span class="idx">03</span> 八席台</h2>
+      <p class="panel-note" id="seat-note">主控、量化、扫描、裁决、股票、仓位、成交、风控。点一席，只看它在流水里留下的记录。灯是账本状态，不是新的成交。</p>
+    </div>
+    <div class="seat-rail" id="seat-rail"></div>
+  </section>
   <div class="stats" id="stats"></div>
   <div class="panel" id="context"></div>
   <section>
@@ -567,7 +632,7 @@
     <h2>交易流水 <span class="en boan-only">Events</span> <span id="ev-count" class="sub" style="font-weight:400;color:var(--muted)"></span></h2>
     <p class="note" id="hist-note" hidden>账本数字是当前纸面结存。流水里标「重置前」的记录来自重置时归档的 jsonl，不回写到当前权益。纸面模拟，没有实盘委托。</p>
     <div class="filters" id="filters"></div>
-    <div class="table-wrap">
+    <div class="table-wrap tape-wrap">
       <table class="wide">
         <thead>
           <tr>
@@ -588,10 +653,13 @@
   </section>
   <footer id="footer">纸面模拟 · 非实盘</footer>
 </main>
+<script src="./savipww-desk.js"></script>
 <script>
 const KNOWN = ["0xboan", "0xTenzo", "savipww"];
 const id = new URLSearchParams(location.search).get("id") || "";
 const SKIN_BOAN = id === "0xboan";
+const SKIN_SAVIPWW = id === "savipww";
+const TYPE_ZH = { open: "开仓", close: "平仓", skip: "跳过", hire: "雇佣", fire: "解雇", rules_update: "规则" };
 const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const LIVE = location.port === "8765" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
 const URLS = id
@@ -609,7 +677,7 @@ const FILTERS = [
   ["fire", "解雇"],
   ["rules_update", "规则"],
 ];
-let state = { events: [], filter: "all", showArchived: true };
+let state = { events: [], filter: "all", showArchived: true, seat: null, eventSig: "" };
 
 function money(n) {
   if (n == null || n === "" || Number.isNaN(Number(n))) return "—";
@@ -811,7 +879,7 @@ function renderContext(b) {
 function renderPositions(rows) {
   const body = document.getElementById("positions");
   if (!rows.length) {
-    const msg = SKIN_BOAN ? "暂无持仓 · 等待跟单信号" : "暂无持仓";
+    const msg = SKIN_BOAN ? "暂无持仓 · 等待跟单信号" : SKIN_SAVIPWW ? "暂无持仓 · 重置前的纸面成交只留在流水里" : "暂无持仓";
     body.innerHTML = `<tr><td colspan="8" class="empty">${msg}</td></tr>`;
     return;
   }
@@ -839,6 +907,7 @@ function visibleEvents() {
   return state.events.filter(e => {
     if (!state.showArchived && e.archived) return false;
     if (state.filter !== "all" && e.type !== state.filter) return false;
+    if (SKIN_SAVIPWW && state.seat && window.SavipwwDesk && !SavipwwDesk.eventMatchesSeat(e, state.seat)) return false;
     return true;
   });
 }
@@ -850,6 +919,12 @@ function renderEvents() {
   document.getElementById("ev-count").textContent =
     `共 ${state.events.length} 条` + (archivedN ? ` · 重置前 ${archivedN}` : "") + ` · 显示 ${rows.length}`;
   document.getElementById("hist-note").hidden = archivedN === 0;
+  if (SKIN_SAVIPWW) {
+    const sig = rows.map(e => [e.ts, e.type, e.symbol || "", e.msg || "", e.archived ? 1 : 0].join("|")).join("~")
+      + "|" + state.filter + "|" + (state.seat || "") + "|" + state.showArchived;
+    if (sig === state.eventSig) return;
+    state.eventSig = sig;
+  }
   if (!rows.length) {
     body.innerHTML = `<tr><td colspan="9" class="empty">暂无事件</td></tr>`;
     return;
@@ -858,9 +933,14 @@ function renderEvents() {
     const arch = e.archived ? `<span class="arch">重置前</span>` : "";
     const who = e.symbol || (e.handle ? "@" + e.handle : "—");
     const fee = e.fee_usd != null && e.fee_usd !== "" ? ` · 费 ${money(e.fee_usd)}` : "";
-    return `<tr>
-      <td data-label="时间" style="white-space:nowrap;color:var(--muted)">${when(e.ts)}</td>
-      <td data-label="类型"><span class="${tagClass(e.type)}">${esc(e.type)}</span>${arch}</td>
+    const typeLabel = SKIN_SAVIPWW ? (TYPE_ZH[e.type] || e.type || "—") : e.type;
+    const side = SKIN_SAVIPWW ? (e.side === "buy" ? `<span class="side-mark">买</span>` : e.side === "sell" ? `<span class="side-mark">卖</span>` : "") : "";
+    const timeCell = SKIN_SAVIPWW
+      ? `<td class="when" data-label="时间"><span class="tl-dot" aria-hidden="true"></span>${when(e.ts)}</td>`
+      : `<td data-label="时间" style="white-space:nowrap;color:var(--muted)">${when(e.ts)}</td>`;
+    return `<tr class="${SKIN_SAVIPWW ? "row-in" : ""}">
+      ${timeCell}
+      <td data-label="类型"><span class="${tagClass(e.type)}">${esc(typeLabel)}</span>${side}${arch}</td>
       <td data-label="标的">${esc(who)}</td>
       <td data-label="分组">${esc(e.sleeve || "—")}</td>
       <td class="num" data-label="数量">${qtyFmt(e.qty)}</td>
@@ -875,14 +955,22 @@ function renderEvents() {
 function renderFilters() {
   const box = document.getElementById("filters");
   const archivedN = state.events.filter(e => e.archived).length;
+  const seatClear = SKIN_SAVIPWW && state.seat
+    ? `<button type="button" data-seat-clear class="on">清除席位 · ${esc(window.SavipwwDesk ? SavipwwDesk.seatLabel(state.seat) : state.seat)}</button>`
+    : "";
   box.innerHTML = FILTERS.map(([k, label]) =>
     `<button type="button" data-filter="${k}" class="${state.filter === k ? "on" : ""}">${label}</button>`
-  ).join("") + (archivedN
+  ).join("") + seatClear + (archivedN
     ? `<label class="check"><input type="checkbox" id="arch" ${state.showArchived ? "checked" : ""}/> 显示重置前</label>`
     : "");
   box.querySelectorAll("button").forEach(btn => {
     btn.addEventListener("click", () => {
-      state.filter = btn.dataset.filter;
+      if (btn.hasAttribute("data-seat-clear")) {
+        state.seat = null;
+        if (window.SavipwwDesk) SavipwwDesk.refreshSeats();
+      } else {
+        state.filter = btn.dataset.filter;
+      }
       renderFilters();
       renderEvents();
     });
@@ -898,7 +986,7 @@ function renderFilters() {
 
 function render(data) {
   const b = data.bot || {};
-  document.title = (b.name || id) + " · 模拟盘详情";
+  document.title = (b.name || id) + (SKIN_SAVIPWW ? " · 八席终端" : " · 模拟盘详情");
   document.getElementById("title").textContent = b.name || id;
   document.getElementById("strategy").textContent = b.strategy || "";
   const whenText = "更新 " + (data.generated_at || b.updated_at || "—") + " · " + (data.timezone || "SGT");
@@ -906,6 +994,11 @@ function render(data) {
   if (SKIN_BOAN) {
     document.documentElement.classList.remove("is-loading");
     meta.innerHTML = `<div class="meta-time">${esc(whenText)}</div><div class="refresh"><span class="spin" id="spin" aria-hidden="true"></span>${LIVE ? "本地接口" : "静态快照"}</div>`;
+  } else if (SKIN_SAVIPWW) {
+    meta.innerHTML = `<span class="mono clock" id="desk-clock">--:--:--</span><div class="updated">${esc(whenText)} · ${LIVE ? "实时接口" : "静态快照"}</div>`;
+    if (window.SavipwwDesk) {
+      try { SavipwwDesk.update(b); } catch (err) { console.error(err); }
+    }
   } else {
     meta.textContent = whenText;
   }
@@ -1038,7 +1131,14 @@ if (SKIN_BOAN && motionQuery.addEventListener) {
     else startAmbient();
   });
 }
+if (SKIN_SAVIPWW && window.SavipwwDesk) {
+  SavipwwDesk.install({
+    getState: () => state,
+    rerender() { renderFilters(); renderEvents(); },
+  });
+}
 load();
+if (SKIN_SAVIPWW) setInterval(load, LIVE ? 30000 : 60000);
 </script>
 </body>
 </html>
