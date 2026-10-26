@@ -1,0 +1,402 @@
+{
+  "generated_at": "2026-10-26T13:32:19+08:00",
+  "timezone": "Asia/Singapore",
+  "bots": [
+    {
+      "id": "0xboan",
+      "name": "模拟盘0xboan",
+      "strategy": "FOMO 周榜跟单 · 两连亏换人",
+      "start_cash": 1000.0,
+      "cash": 246.0415,
+      "equity": 1883.1415,
+      "realized_pnl": 0.0,
+      "trade_count": 0,
+      "win_count": 0,
+      "loss_count": 0,
+      "open_positions_count": 2,
+      "current_trader": "jimmyneutron1",
+      "consecutive_losses": 0,
+      "sizing_note": "对方下单×0.25；未知则权益×0.05；单笔上限权益×0.25",
+      "updated_at": "2026-10-26T13:19:47+08:00",
+      "recent_events": [
+        {
+          "ts": "2026-10-14T07:14:04+08:00",
+          "type": "hire",
+          "bot_id": "0xboan",
+          "handle": "healthysmilee",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @healthysmilee"
+        },
+        {
+          "ts": "2026-10-14T07:17:20+08:00",
+          "type": "rules_update",
+          "bot_id": "0xboan",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）"
+        },
+        {
+          "ts": "2026-10-14T11:46:35+08:00",
+          "type": "fire",
+          "bot_id": "0xboan",
+          "handle": "healthysmilee",
+          "symbol": null,
+          "pnl": null,
+          "msg": "解雇 @healthysmilee: ops rehire: dropped 7d top100 + ~43h silent; user asked 换人 for PK pace"
+        },
+        {
+          "ts": "2026-10-14T11:46:37+08:00",
+          "type": "hire",
+          "bot_id": "0xboan",
+          "handle": "jimmyneutron1",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @jimmyneutron1"
+        },
+        {
+          "ts": "2026-10-15T09:13:29+08:00",
+          "type": "rules_update",
+          "bot_id": "0xboan",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "选榜过滤更新：全窗口绿(24h/7d/30d/all-time)+验证钱包+月≥70笔；按每美元成交利润排序；雇佣前确认仍活跃。未换人（帖中四人已静默8–21天，帖标明filter非信号）"
+        },
+        {
+          "ts": "2026-10-15T09:14:59+08:00",
+          "type": "open",
+          "bot_id": "0xboan",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "开仓跟买 MOTION $250.0 (fee $1.25)"
+        },
+        {
+          "ts": "2026-10-26T09:21:13+08:00",
+          "type": "open",
+          "bot_id": "0xboan",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "开仓跟买 FOMO $500.2075 (fee $2.50)"
+        }
+      ],
+      "source_path": "/workspace/fomo-sim-0xboan"
+    },
+    {
+      "id": "0xTenzo",
+      "name": "模拟盘0xTenzo",
+      "strategy": "FOMO 周榜跟单 · 两连亏换人",
+      "start_cash": 1000.0,
+      "cash": 1000.0,
+      "equity": 1000.0,
+      "realized_pnl": 0.0,
+      "trade_count": 0,
+      "win_count": 0,
+      "loss_count": 0,
+      "open_positions_count": 0,
+      "current_trader": "aiwass",
+      "consecutive_losses": 0,
+      "sizing_note": "对方下单×0.25；未知则权益×0.05；单笔上限权益×0.25",
+      "updated_at": "2026-10-15T21:56:00+08:00",
+      "recent_events": [
+        {
+          "ts": "2026-10-14T07:09:45+08:00",
+          "type": "hire",
+          "bot_id": "0xTenzo",
+          "handle": "jamjam0407",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @jamjam0407"
+        },
+        {
+          "ts": "2026-10-14T07:18:46+08:00",
+          "type": "rules_update",
+          "bot_id": "0xTenzo",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%"
+        },
+        {
+          "ts": "2026-10-14T11:46:56+08:00",
+          "type": "fire",
+          "bot_id": "0xTenzo",
+          "handle": "jamjam0407",
+          "symbol": null,
+          "pnl": null,
+          "msg": "解雇 @jamjam0407: 运营重雇（对方低频/捂仓，非两连亏）"
+        },
+        {
+          "ts": "2026-10-14T11:46:57+08:00",
+          "type": "hire",
+          "bot_id": "0xTenzo",
+          "handle": "bomber33",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @bomber33"
+        },
+        {
+          "ts": "2026-10-15T09:12:46+08:00",
+          "type": "rules_update",
+          "bot_id": "0xTenzo",
+          "handle": null,
+          "symbol": null,
+          "pnl": null,
+          "msg": "规则更新：雇佣筛选改为全窗口盈利+验证钱包+按单位成交额效率排序，并检查近期活跃；不盲跟今日榜一"
+        },
+        {
+          "ts": "2026-10-15T21:56:00+08:00",
+          "type": "fire",
+          "bot_id": "0xTenzo",
+          "handle": "bomber33",
+          "symbol": null,
+          "pnl": null,
+          "msg": "解雇 @bomber33: 运营重雇：按 0xTenzo 新筛选重筛（全窗口绿+验证钱包+效率；bomber33 已掉榜/24h 不稳）"
+        },
+        {
+          "ts": "2026-10-15T21:56:02+08:00",
+          "type": "hire",
+          "bot_id": "0xTenzo",
+          "handle": "aiwass",
+          "symbol": null,
+          "pnl": null,
+          "msg": "雇佣交易员 @aiwass"
+        }
+      ],
+      "source_path": "/workspace/fomo-sim"
+    },
+    {
+      "id": "savipww",
+      "name": "模拟盘savipww",
+      "strategy": "八席纸面台 QUANT→SCAN→JUDGE→SIZE→FILL · RISK",
+      "start_cash": 1000.0,
+      "cash": 1012.9995,
+      "equity": 1012.9995,
+      "realized_pnl": 12.9995,
+      "trade_count": 1,
+      "win_count": 1,
+      "loss_count": 0,
+      "open_positions_count": 0,
+      "current_trader": null,
+      "consecutive_losses": null,
+      "sizing_note": "Kelly×自由现金，meme 封顶约 6% · QUANT 拨盘",
+      "updated_at": "2026-10-21T08:24:44+08:00",
+      "recent_events": [
+        {
+          "ts": "2026-10-21T08:24:40+08:00",
+          "type": "skip",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "PRICED",
+          "pnl": null,
+          "msg": "PRICED · judge_reject:soft_momentum_already_spent:0.85>0.6"
+        },
+        {
+          "ts": "2026-10-21T08:24:41+08:00",
+          "type": "open",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "DEMO1",
+          "pnl": null,
+          "msg": "DEMO1 · SCAN→JUDGE→SIZE"
+        },
+        {
+          "ts": "2026-10-21T08:24:43+08:00",
+          "type": "close",
+          "bot_id": "savipww",
+          "handle": null,
+          "symbol": "DEMO1",
+          "pnl": 12.999471,
+          "msg": "DEMO1 · volume_momentum_collapse:0.1667<0.2"
+        }
+      ],
+      "source_path": "/workspace/paper-trading/data",
+      "seats": [
+        "CHIEF",
+        "QUANT",
+        "SCAN",
+        "JUDGE",
+        "STOCKS",
+        "SIZE",
+        "FILL",
+        "RISK"
+      ]
+    }
+  ],
+  "recent_events": [
+    {
+      "ts": "2026-10-26T09:21:13+08:00",
+      "type": "open",
+      "bot_id": "0xboan",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "开仓跟买 FOMO $500.2075 (fee $2.50)",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-21T08:24:43+08:00",
+      "type": "close",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "DEMO1",
+      "pnl": 12.999471,
+      "msg": "DEMO1 · volume_momentum_collapse:0.1667<0.2",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-21T08:24:41+08:00",
+      "type": "open",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "DEMO1",
+      "pnl": null,
+      "msg": "DEMO1 · SCAN→JUDGE→SIZE",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-21T08:24:40+08:00",
+      "type": "skip",
+      "bot_id": "savipww",
+      "handle": null,
+      "symbol": "PRICED",
+      "pnl": null,
+      "msg": "PRICED · judge_reject:soft_momentum_already_spent:0.85>0.6",
+      "bot_name": "模拟盘savipww"
+    },
+    {
+      "ts": "2026-10-15T21:56:02+08:00",
+      "type": "hire",
+      "bot_id": "0xTenzo",
+      "handle": "aiwass",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @aiwass",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-15T21:56:00+08:00",
+      "type": "fire",
+      "bot_id": "0xTenzo",
+      "handle": "bomber33",
+      "symbol": null,
+      "pnl": null,
+      "msg": "解雇 @bomber33: 运营重雇：按 0xTenzo 新筛选重筛（全窗口绿+验证钱包+效率；bomber33 已掉榜/24h 不稳）",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-15T09:14:59+08:00",
+      "type": "open",
+      "bot_id": "0xboan",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "开仓跟买 MOTION $250.0 (fee $1.25)",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-15T09:13:29+08:00",
+      "type": "rules_update",
+      "bot_id": "0xboan",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "选榜过滤更新：全窗口绿(24h/7d/30d/all-time)+验证钱包+月≥70笔；按每美元成交利润排序；雇佣前确认仍活跃。未换人（帖中四人已静默8–21天，帖标明filter非信号）",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-15T09:12:46+08:00",
+      "type": "rules_update",
+      "bot_id": "0xTenzo",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "规则更新：雇佣筛选改为全窗口盈利+验证钱包+按单位成交额效率排序，并检查近期活跃；不盲跟今日榜一",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-14T11:46:57+08:00",
+      "type": "hire",
+      "bot_id": "0xTenzo",
+      "handle": "bomber33",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @bomber33",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-14T11:46:56+08:00",
+      "type": "fire",
+      "bot_id": "0xTenzo",
+      "handle": "jamjam0407",
+      "symbol": null,
+      "pnl": null,
+      "msg": "解雇 @jamjam0407: 运营重雇（对方低频/捂仓，非两连亏）",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-14T11:46:37+08:00",
+      "type": "hire",
+      "bot_id": "0xboan",
+      "handle": "jimmyneutron1",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @jimmyneutron1",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-14T11:46:35+08:00",
+      "type": "fire",
+      "bot_id": "0xboan",
+      "handle": "healthysmilee",
+      "symbol": null,
+      "pnl": null,
+      "msg": "解雇 @healthysmilee: ops rehire: dropped 7d top100 + ~43h silent; user asked 换人 for PK pace",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-14T07:18:46+08:00",
+      "type": "rules_update",
+      "bot_id": "0xTenzo",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "改为动态仓位：有对方金额→0.25×；否则权益5%；上限25%",
+      "bot_name": "模拟盘0xTenzo"
+    },
+    {
+      "ts": "2026-10-14T07:17:20+08:00",
+      "type": "rules_update",
+      "bot_id": "0xboan",
+      "handle": null,
+      "symbol": null,
+      "pnl": null,
+      "msg": "仓位改为动态：已知对方下单额则 0.25x；否则按权益 5%（随本金增长）",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-14T07:14:04+08:00",
+      "type": "hire",
+      "bot_id": "0xboan",
+      "handle": "healthysmilee",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @healthysmilee",
+      "bot_name": "模拟盘0xboan"
+    },
+    {
+      "ts": "2026-10-14T07:09:45+08:00",
+      "type": "hire",
+      "bot_id": "0xTenzo",
+      "handle": "jamjam0407",
+      "symbol": null,
+      "pnl": null,
+      "msg": "雇佣交易员 @jamjam0407",
+      "bot_name": "模拟盘0xTenzo"
+    }
+  ],
+  "note": "纸面模拟 · 非实盘 · Paper only"
+}
